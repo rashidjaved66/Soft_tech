@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#1f6feb">
+<meta name="mobile-web-app-title" content="Habib Naveed CSP">
+<meta name="application-name" content="Habib Naveed CSP">
+<link rel="manifest" href="manifest.webmanifest?v=20260828.1">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Habib Naveed CSP">
+<meta name="app-version" content="2026.08.29.1">
+<script>
+/*
+  APP UPDATE / FRESH LOGIN
+  Jab GitHub par naya index.html upload ho aur APP_VERSION change ho,
+  purani login/session + purana app data clear ho jayega.
+  Is se updated app fresh login screen se start hogi.
+*/
+const APP_VERSION = "2026.08.29.1";
+(function(){
+  try{
+    const oldVersion = localStorage.getItem("HNC_APP_VERSION");
+    if(oldVersion !== APP_VERSION){
+      // Purani app ki login/session state khatam.
+      sessionStorage.removeItem("orderBookerUser");
+      localStorage.removeItem("orderBookerUsers_v3");
+      localStorage.setItem("HNC_APP_VERSION", APP_VERSION);
+    }
+  }catch(e){}
+})();
+</script>
+<title>Habib Naveed Confectionery CSP - Order Booker v5 WhatsApp</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;min-height:100%;margin:0}body{margin:0;background:#eef3f8;font-family:Calibri,"Segoe UI",Arial,sans-serif;color:#222;-webkit-tap-highlight-color:transparent}
+button,input,select{touch-action:manipulation}
+.container{max-width:700px;margin:auto;padding:10px}
+.card{background:#fff;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 12px #00000012}
+.header{padding:16px;border-radius:18px}
+.header h1{font-size:21px;line-height:1.2}
+h2{font-size:19px}
+input,select{min-height:46px;padding:11px 12px}
+button{min-height:44px}
+.save{min-height:52px;position:sticky;bottom:8px;z-index:5;box-shadow:0 4px 14px #1f6feb44}
+
+.container{max-width:700px;margin:auto;padding:14px}
+.header{background:#1f6feb;color:#fff;padding:18px;border-radius:16px;margin-bottom:14px}
+h1,h2{margin:0 0 12px}.header h1{font-size:24px}.header p{margin:0;opacity:.9}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px #0001}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f7f9fc;border-radius:12px;padding:14px}
+.stat b{display:block;font-size:22px;color:#1f6feb;margin-top:5px}
+label{display:block;font-weight:bold;font-size:14px;margin:9px 0 5px}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px}
+.item{border:1px solid #e2e5e9;border-radius:12px;padding:12px;margin:10px 0;background:#fafafa}
+.itemgrid{display:grid;grid-template-columns:1.5fr .7fr 1fr;gap:8px}
+button{border:0;border-radius:10px;padding:11px 13px;font-size:14px;font-weight:bold;cursor:pointer}
+.add{background:#e8f1ff;color:#1f6feb;width:100%;margin-top:6px}.save{background:#1f6feb;color:#fff;width:100%;margin-top:14px;font-size:17px}
+.save:disabled{background:#cfd6df;color:#68707a;cursor:not-allowed;box-shadow:none}
+.remove,.danger{background:#fee;color:#c00}.grand{text-align:right;font-size:21px;font-weight:bold;margin-top:14px;color:#1f6feb}
+.search{margin-bottom:10px}.order{border:1px solid #e1e4e8;border-radius:12px;padding:13px;margin-top:10px}
+.orderhead{display:flex;justify-content:space-between;gap:8px}.name{font-weight:bold;font-size:17px}.muted{font-size:13px;color:#666}
+.row{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.pdf{background:#f0f0f0;color:#222;width:100%}
+.empty{text-align:center;color:#777;padding:20px}
+.loginWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.loginCard{background:#fff;width:100%;max-width:420px;padding:24px;border-radius:18px;box-shadow:0 4px 18px #0002}
+.loginLogo{text-align:center;font-size:30px;margin-bottom:8px}.loginCard h1{text-align:center;font-size:22px}
+.loginCard p{text-align:center;color:#666}.loginBtn{background:#1f6feb;color:#fff;width:100%;font-size:17px;margin-top:14px}
+.userbar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;padding:10px 12px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px #0001}
+.logout{background:#fee;color:#c00;padding:8px 10px}
+.customerBox{background:#f7f9fc;border-radius:12px;padding:12px;margin-bottom:12px}
+.productEntry{background:#f7f9fc;border:1px solid #e2e5e9;border-radius:14px;padding:13px;margin-bottom:12px}
+.productEntry .add{margin-top:12px}
+.smallBtn{background:#e8f1ff;color:#1f6feb;width:100%;margin-top:8px}
+.hidden{display:none!important}
+@media(max-width:480px){.itemgrid{grid-template-columns:1fr 1fr}.itemgrid>div:last-child{grid-column:1/-1}}
+
+.productHint{font-size:12px;color:#666;margin:6px 2px 0}
+.savedBadge{display:inline-block;background:#e8f1ff;color:#1f6feb;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;margin-left:5px}
+@media(max-width:480px){
+  .container{padding:8px}
+  .summary{grid-template-columns:1fr 1fr}
+  .stat{padding:11px}
+  .stat b{font-size:19px}
+  .itemgrid{grid-template-columns:1fr 1fr}
+  .itemgrid>div:last-child{grid-column:1/-1}
+  .actions{grid-template-columns:1fr}
+  .userbar{position:sticky;top:0;z-index:10}
+  .header p{font-size:13px}
+}
+.authTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.authTab{background:#eef2f7;color:#333}
+.authTab.active{background:#1f6feb;color:#fff}
+.pwaHint{font-size:12px;color:#777;text-align:center;margin-top:14px;line-height:1.4}
+.designerCredit{font-size:12px;margin-top:7px;opacity:.9;font-weight:600}
+
+.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.addItemBtn{background:#e8f1ff;color:#1f6feb;white-space:nowrap}
+.pendingBadge{background:#fff3cd;color:#8a6500;border-radius:999px;padding:5px 10px;font-weight:bold;font-size:13px}
+.pendingOrder{border:1px solid #f0dfaa;background:#fffdf5;border-radius:14px;padding:13px;margin-top:10px}
+.pendingOrder .pendingTitle{font-weight:bold;font-size:17px}
+.completeBtn{background:#14833b;color:#fff;width:100%;margin-top:10px}
+.pendingMeta{font-size:13px;color:#666;margin-top:3px}
+
+.ledgerSummary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.ledgerStat{background:#f7f9fc;border-radius:11px;padding:10px}
+.ledgerStat b{display:block;font-size:19px;color:#1f6feb;margin-top:3px}
+.ledgerCustomer{border:1px solid #e1e4e8;border-radius:14px;padding:13px;margin-top:10px}
+.ledgerName{font-size:18px;font-weight:bold}
+.ledgerTable{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+.ledgerTable th,.ledgerTable td{padding:7px;border-bottom:1px solid #eee;text-align:left}
+.ledgerTable th:last-child,.ledgerTable td:last-child{text-align:right}
+
+.collapseBtn{width:100%;display:flex;justify-content:space-between;align-items:center;background:#f7f9fc;color:#222;font-size:17px;text-align:left;padding:13px 14px}
+.collapseBtn span,.addItemBtn span{font-size:20px;line-height:1}
+.collapsiblePanel{padding-top:10px}
+
+.quickBoxes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+.quickBox{background:#f7f9fc;color:#222;border:1px solid #e1e4e8;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.closePanel{background:#fee;color:#c00}
+.orderEntryGrid{margin-top:4px}
+select{background:#fff}
+@media(max-width:480px){.quickBoxes{grid-template-columns:1fr}.orderEntryGrid{grid-template-columns:1fr 1fr}.orderEntryGrid>div:last-child{grid-column:1/-1}}
+
+.summaryHeader{width:100%;background:#f7f9fc;color:#222;display:flex;align-items:center;justify-content:space-between;text-align:left;font-size:18px;padding:12px 14px;margin-bottom:12px}
+.summaryHeader span{font-weight:bold;letter-spacing:2px}
+.todayDetails{border-top:1px solid #eee;margin-top:12px;padding-top:12px}
+.todayDetails h3{margin:0 0 10px}
+.todayOrderDetail{border:1px solid #e1e4e8;border-radius:12px;padding:11px;margin:9px 0;background:#fff}
+.todayOrderHead{display:flex;justify-content:space-between;gap:8px}
+.todayItem{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:6px 0;font-size:14px}
+.todayGrand{text-align:right;font-weight:bold;color:#1f6feb;margin-top:8px}
+
+.todayDetails{position:fixed;inset:0;z-index:9999;background:#fff;overflow-y:auto;padding:18px 14px 30px;-webkit-overflow-scrolling:touch;margin:0;border:0;border-radius:0}
+.todayDetailsHead{position:sticky;top:0;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px;border-bottom:1px solid #eee;z-index:2}
+.todayDetailsHead h3{margin:0}
+.closeToday{background:#fee;color:#c00;border:0;border-radius:10px;padding:8px 12px;font-size:16px}
+
+.statBtn{border:1px solid #e1e4e8;background:#fff;cursor:pointer;width:100%;font:inherit}
+.statBtn:active{transform:scale(.98)}
+.summaryListOverlay{position:fixed;inset:0;z-index:10000;background:#fff;overflow-y:auto;padding:16px 14px 30px}
+.summaryListTop{position:sticky;top:0;background:#fff;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:4px 0 12px;margin-bottom:10px;z-index:2}
+.summaryListTop h2{margin:0;font-size:20px}
+.summaryListRow{border:1px solid #e1e4e8;border-radius:12px;padding:12px;margin:9px 0;background:#fff;cursor:pointer}
+.summaryListRow:active{background:#f7f9fc}
+.summaryListRow b{font-size:16px}
+.summaryListMeta{font-size:13px;color:#666;margin-top:4px}
+.summaryDetailCard{border:1px solid #e1e4e8;border-radius:12px;padding:12px;margin-top:10px;background:#fff}
+.summaryDetailLine{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:7px 0;gap:10px}
+.summaryDetailLine:last-child{border-bottom:0}
+.summaryBack{margin-bottom:10px;background:#f7f9fc;color:#222}
+
+.orderEntryGrid{grid-template-columns:1.25fr 1.5fr .7fr .9fr}
+.orderEntryGrid>div:last-child{grid-column:auto}
+.productEntry{margin-top:10px}
+@media(max-width:650px){
+  .orderEntryGrid{grid-template-columns:1fr 1fr}
+  .orderEntryGrid>div:first-child{grid-column:1/-1}
+  .orderEntryGrid>div:nth-child(2){grid-column:1/-1}
+  .orderEntryGrid>div:last-child{grid-column:1/-1}
+}
+</style>
+
+<style>
+#installAppBtn{
+  display:none;position:fixed;right:12px;bottom:12px;z-index:10001;
+  background:#1f6feb;color:#fff;border:0;border-radius:999px;
+  padding:12px 16px;font-weight:700;font-size:14px;
+  box-shadow:0 4px 16px #0003
+}
+</style>
+<button id="installAppBtn" onclick="installPWA()">📲 Install App</button>
+
+</head>
+<body>
+<div id="loginScreen" class="loginWrap">
+  <div class="loginCard">
+    <div class="loginLogo">🍰</div>
+    <h1>Habib Naveed Confectionery CSP</h1>
+    <p>Order Booker • Login / Signup</p>
+
+    <div class="authTabs">
+      <button id="loginTab" class="authTab active" onclick="showAuth('login')">Login</button>
+      <button id="signupTab" class="authTab" onclick="showAuth('signup')">Signup</button>
+    </div>
+
+    <div id="loginPanel">
+      <label>Username</label>
+      <input id="loginUser" autocomplete="username" placeholder="Enter username">
+      <label>Password</label>
+      <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter')login()">
+      <button class="loginBtn" onclick="login()">🔐 Login</button>
+      <div id="loginMsg" class="muted" style="text-align:center;margin-top:10px;color:#c00"></div>
+    </div>
+
+    <div id="signupPanel" class="hidden">
+      <label>Full Name</label>
+      <input id="signupName" autocomplete="name" placeholder="Enter your name">
+      <label>Username</label>
+      <input id="signupUser" autocomplete="username" placeholder="Create username">
+      <label>Password</label>
+      <input id="signupPass" type="password" autocomplete="new-password" placeholder="Create password">
+      <label>Confirm Password</label>
+      <input id="signupPass2" type="password" autocomplete="new-password" placeholder="Confirm password"
+             onkeydown="if(event.key==='Enter')signup()">
+      <button class="loginBtn" onclick="signup()">📝 Create Account</button>
+      <div id="signupMsg" class="muted" style="text-align:center;margin-top:10px"></div>
+    </div>
+
+    <div class="pwaHint">📲 Install this app from your browser menu for an app-like experience.</div>
+  </div>
+</div>
+
+<div id="app" class="container hidden">
+  <div class="header">
+    <h1>🍰 Habib Naveed Confectionery CSP</h1>
+    <p>Order Booker • Multiple Items • Offline • Separate User Records</p>
+    <p class="designerCredit">Design by Rashid Javed • 0314-6775046</p>
+  </div>
+
+  <div class="userbar">
+    <div><b>👤 <span id="loggedUser"></span></b><div class="muted">📞 0303-9797145</div></div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+  <div class="card dashboardView">
+    <div class="sectionHead"><h2 style="margin:0">💾 Backup & Restore</h2></div>
+    <div class="actions">
+      <button class="pdf" onclick="backupData()">⬇️ Backup Data</button>
+      <button class="pdf" onclick="document.getElementById('restoreFile').click()">⬆️ Restore Data</button>
+      <button class="danger" id="resetAllCompanyBtn" onclick="resetAllCompanyData()">🗑️ Reset All</button>
+    </div>
+    <input id="restoreFile" type="file" accept=".json,application/json" class="hidden" onchange="restoreData(event)">
+    <div class="muted" style="margin-top:8px">Purane mobile se Backup bana kar naye mobile mein Restore karein.</div>
+  </div>
+
+  <div class="card dashboardView" id="newOrderLauncher">
+    <button class="save" onclick="openNewOrder()">➕ New Order</button>
+      <button class="save" type="button" onclick="openPaymentVoucher()">💳 New Payment Voucher</button>
+      <button class="pdf" type="button" onclick="openCustomerLedger()">👤 Customer Ledger</button>
+      <button class="pdf" type="button" onclick="openPendingFinalSummary()">⏳ Pending Orders / Final Summary</button>
+  </div>
+
+  <div class="card dashboardView">
+    <button class="summaryHeader" onclick="toggleTodaySummary()">📊 Today Summary <span id="summaryDots">•••</span></button>
+    <div class="summary">
+      <div class="stat">Orders <b id="todayOrders">0</b></div>
+      <div class="stat">Items <b id="todayItems">0</b></div>
+      <div class="stat">Customers <b id="todayCustomers">0</b></div>
+      <div class="stat">Sales <b id="todaySales">Rs. 0</b></div>
+    </div>
+    <div class="actions">
+      <button class="pdf" onclick="todaySummaryPDF()">📄 Today Summary PDF</button>
+      <button class="pdf" onclick="todayAllPrint()">🖨️ Today All Print</button>
+      <button class="pdf" id="todayAllSavePdfBtn" type="button" onclick="todayAllSavePDF()">📥 Save Today All PDF</button>
+      <button class="pdf" onclick="allOrdersPDF()">📄 My Orders PDF</button>
+    </div>
+
+    <div id="todaySummaryDetails" class="todayDetails hidden">
+      <div class="todayDetailsHead"><h3>📋 Today's Complete Details</h3><button class="closeToday" onclick="toggleTodaySummary()">✖</button></div>
+      <div id="todayDetailsContent"></div>
+    </div>
+  </div>
+
+  <div class="card dashboardView hidden" id="newOrderPanel">
+    <div class="sectionHead"><h2>➕ New Order</h2><button class="closePanel" onclick="showDashboard()">✖ Dashboard</button></div>
+    <label>Customer</label>
+    <input id="customerSearch" list="customerList" placeholder="Search/select previous customer..." oninput="customerSelected()">
+    <datalist id="customerList"></datalist>
+    <button class="smallBtn" onclick="newCustomer()">➕ New Customer</button>
+
+    <div class="customerBox">
+      <label>Customer Name</label>
+      <input id="customer" placeholder="Customer name">
+      <label>Mobile</label>
+      <input id="mobile" type="tel" placeholder="03XXXXXXXXX">
+      <label>Address</label>
+      <input id="address" placeholder="Customer address">
+      <div id="customerHistory" class="muted" style="margin-top:8px"></div>
+    </div>
+
+    <div class="sectionHead">
+      <h2 style="margin-top:20px;margin-bottom:0">Order Items</h2>
+      
+    </div>
+    <div class="productEntry">
+      <label>Product Name</label>
+      <input id="orderProduct" list="productList" placeholder="Search/select previous product..." autocomplete="off" oninput="orderProductChanged()">
+      <datalist id="productList"></datalist>
+
+      <div class="itemgrid orderEntryGrid">
+        <div>
+          <label>Qty</label>
+          <input id="newQty" type="number" min="1" value="1" oninput="updateNewProductTotal()">
+        </div>
+        <div>
+          <label>Rate</label>
+          <input id="newRate" type="number" min="0" step="0.01" placeholder="Rate" oninput="updateNewProductTotal()">
+        </div>
+        <div>
+          <label>Amount</label>
+          <input id="newTotal" readonly value="Rs. 0.00">
+        </div>
+      </div>
+
+      <button class="add" onclick="addProductFromBox()">💾 Save</button>
+    </div>
+
+    <div id="items"></div>
+
+    <div class="grand">Grand Total: <span id="grandTotal">Rs. 0.00</span></div>
+    <button class="save" onclick="saveOrder()">💾 Save Complete Order</button>
+  </div>
+
+  <div class="card hidden" id="pendingPanel">
+    <div class="sectionHead">
+      <h2 style="margin:0">⏳ Pending Orders</h2>
+      <span class="pendingBadge" id="pendingCount">0</span>
+    </div>
+    <div id="pendingOrders"></div>
+  </div>
+
+  <div class="card hidden" id="finalSummaryPanel">
+    <div class="sectionHead">
+      <h2 style="margin:0">📄 Final Summary</h2>
+      <span class="pendingBadge" id="finalSummaryStatus">Pending Orders</span>
+    </div>
+    <div class="muted" id="finalSummaryMessage">All orders complete hone ke baad Final Summary PDF generate karein.</div>
+    <button class="save" id="finalSummaryBtn" onclick="finalSummaryPDF()" disabled>📄 Generate Final Summary PDF</button>
+  </div>
+
+  <div class="card hidden" id="paymentVoucherPanel">
+    <div class="sectionHead">
+      <h2 style="margin:0">💳 Payment Voucher</h2>
+    </div>
+
+    <label>Customer</label>
+    <input id="voucherCustomerSearch" list="voucherCustomerList"
+           placeholder="Search customer / mobile..." oninput="voucherCustomerSelected()">
+    <datalist id="voucherCustomerList"></datalist>
+
+    <div class="customerBox">
+      <label>Customer Name</label>
+      <input id="voucherCustomer" placeholder="Customer name">
+
+      <label>Mobile</label>
+      <input id="voucherMobile" type="tel" placeholder="03XXXXXXXXX">
+
+      <label>Address</label>
+      <input id="voucherAddress" placeholder="Customer address">
+    </div>
+
+    <div class="itemgrid">
+      <div>
+        <label>Transaction Type</label>
+        <select id="voucherType">
+          <option value="credit">Credit — Payment Received</option>
+          <option value="debit">Debit — Amount Due/Added</option>
+        </select>
+      </div>
+      <div>
+        <label>Amount</label>
+        <input id="voucherAmount" type="number" min="0" step="0.01" placeholder="Amount">
+      </div>
+    </div>
+
+    <label>Note / Reference</label>
+    <input id="voucherNote" placeholder="Optional note">
+
+    <button class="save" onclick="postPaymentVoucher()">➕ Post Voucher</button>
+    <div id="voucherMsg" class="muted" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card ledgerRelated hidden">
+    <div class="sectionHead">
+      <h2 style="margin:0">📊 Customer Wise Report</h2>
+      <button class="pdf" onclick="renderCustomerLedger()">🔄 Refresh</button>
+    </div>
+    <input class="search" id="reportCustomerSearch" list="reportCustomerList"
+           placeholder="🔎 Search customer / mobile..." oninput="renderCustomerWiseReport()">
+    <datalist id="reportCustomerList"></datalist>
+    <div id="customerWiseReport"></div>
+  </div>
+
+  <div id="ledgerPanel" class="card hidden">
+    <div class="sectionHead">
+      <h2>👤 Customer Ledger</h2>
+      <div class="actions">
+        <button class="pdf" type="button" onclick="customerLedgerPDF()">📄 Ledger PDF</button>
+        <button class="closePanel" onclick="showDashboard()">✖ Dashboard</button>
+      </div>
+    </div>
+    <input class="search" id="ledgerSearch" list="ledgerCustomerList"
+           placeholder="🔎 Search customer or mobile..." oninput="renderCustomerLedger()">
+    <datalist id="ledgerCustomerList"></datalist>
+    <div id="customerLedger"></div>
+  </div>
+
+  <div class="card dashboardView">
+    <h2>📋 My Saved Orders</h2>
+    <input class="search" id="search" type="search" placeholder="🔎 Search customer, mobile or product..." oninput="renderOrders()">
+    <div id="orders"></div>
+  </div>
+</div>
+
+<script>
+const DEFAULT_USERS = {
+  admin:{password:"1234",name:"Admin"},
+  booker1:{password:"1234",name:"Booker 1"},
+  booker2:{password:"1234",name:"Booker 2"},
+  booker3:{password:"1234",name:"Booker 3"}
+};
+
+const USERS_KEY = "orderBookerUsers_v3";
+function loadUsers(){
+  try{return JSON.parse(localStorage.getItem(USERS_KEY)||"null") || {...DEFAULT_USERS};}
+  catch(e){return {...DEFAULT_USERS};}
+}
+function saveUsers(users){
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function getUsers(){ return loadUsers(); }
+
+let currentUser = sessionStorage.getItem("orderBookerUser") || "";
+let items=[];
+let orders=[];
+let payments=[];
+let products=[];
+let productCatalog={};
+
+function userKey(){ return "orderBookerPro_"+currentUser; }
+
+function loadUserData(){
+  orders=JSON.parse(localStorage.getItem(userKey())||"[]");
+  payments=JSON.parse(localStorage.getItem(userKey()+"_payments")||"[]");
+  try{productCatalog=JSON.parse(localStorage.getItem(userKey()+"_products")||"{}")||{};}
+  catch(e){productCatalog={};}
+}
+function saveUserData(){
+  localStorage.setItem(userKey(),JSON.stringify(orders));
+  localStorage.setItem(userKey()+"_payments",JSON.stringify(payments));
+  localStorage.setItem(userKey()+"_products",JSON.stringify(productCatalog));
+}
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function money(n){
+  return Number(n||0).toLocaleString("en-PK",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function showAuth(mode){
+  const lp=document.getElementById("loginPanel"), sp=document.getElementById("signupPanel");
+  const lt=document.getElementById("loginTab"), st=document.getElementById("signupTab");
+  if(mode==="signup"){
+    lp.classList.add("hidden"); sp.classList.remove("hidden");
+    lt.classList.remove("active"); st.classList.add("active");
+  }else{
+    sp.classList.add("hidden"); lp.classList.remove("hidden");
+    st.classList.remove("active"); lt.classList.add("active");
+  }
+}
+function signup(){
+  const name=document.getElementById("signupName").value.trim();
+  const u=document.getElementById("signupUser").value.trim().toLowerCase();
+  const p=document.getElementById("signupPass").value;
+  const p2=document.getElementById("signupPass2").value;
+  const msg=document.getElementById("signupMsg");
+  if(!name || !u || !p){msg.style.color="#c00";msg.textContent="All fields are required.";return}
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)){msg.style.color="#c00";msg.textContent="Username: 3-30 chars, letters/numbers . _ - only.";return}
+  if(p.length<4){msg.style.color="#c00";msg.textContent="Password must be at least 4 characters.";return}
+  if(p!==p2){msg.style.color="#c00";msg.textContent="Passwords do not match.";return}
+  const users=getUsers();
+  if(users[u]){msg.style.color="#c00";msg.textContent="Username already exists.";return}
+  users[u]={password:p,name:name};
+  saveUsers(users);
+  msg.style.color="#14833b";
+  msg.textContent="Account created successfully. You can now login.";
+  document.getElementById("loginUser").value=u;
+  document.getElementById("loginPass").value="";
+  setTimeout(()=>showAuth("login"),700);
+}
+
+function login(){
+  const u=document.getElementById("loginUser").value.trim().toLowerCase();
+  const p=document.getElementById("loginPass").value;
+  const users=getUsers();
+  if(users[u] && users[u].password===p){
+    currentUser=u;
+    sessionStorage.setItem("orderBookerUser",u);
+    document.getElementById("loginMsg").textContent="";
+    openApp();
+  }else{
+    document.getElementById("loginMsg").textContent="Invalid username or password.";
+  }
+}
+function logout(){
+  sessionStorage.removeItem("orderBookerUser");
+  currentUser="";
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("loginUser").value="";
+  document.getElementById("loginPass").value="";
+}
+function openApp(){
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  window.scrollTo(0,0);
+  document.getElementById("loggedUser").textContent=getUsers()[currentUser].name+" ("+currentUser+")";
+  loadUserData();
+  items=[];
+  renderItems();
+  renderOrders();
+  renderPendingOrders();
+  updateSummary();
+  renderCustomerList();
+  renderProductList();
+  renderCustomerLedgerList();
+  renderVoucherCustomerList();
+  renderReportCustomerList();
+  renderCustomerLedger();
+  renderCustomerWiseReport();
+  updateNewProductTotal();
+  updateFinalSummaryButton();
+  showDashboard();
+}
+
+
+function getAllCustomerKeys(){
+  const keys=new Set();
+  orders.forEach(o=>{
+    const k=(o.mobile||o.customer||"").trim().toLowerCase();
+    if(k)keys.add(k);
+  });
+  payments.forEach(p=>{
+    const k=(p.mobile||p.customer||"").trim().toLowerCase();
+    if(k)keys.add(k);
+  });
+  return keys;
+}
+
+function getCustomerTransactions(){
+  const groups={};
+
+  function ensure(o){
+    const key=(o.mobile||o.customer||"").trim().toLowerCase();
+    if(!key)return null;
+    if(!groups[key])groups[key]={
+      key,
+      name:o.customer||"",
+      mobile:o.mobile||"",
+      address:o.address||"",
+      transactions:[]
+    };
+    if(o.customer)groups[key].name=o.customer;
+    if(o.mobile)groups[key].mobile=o.mobile;
+    if(o.address)groups[key].address=o.address;
+    return groups[key];
+  }
+
+  orders.forEach(o=>{
+    const g=ensure(o);
+    if(!g)return;
+    g.transactions.push({
+      id:o.id,
+      date:o.date||"",
+      dateKey:o.dateKey||"",
+      ref:o.orderNo||"Order",
+      type:"debit",
+      amount:Number(o.grand)||0,
+      note:"Order Sale"
+    });
+  });
+
+  payments.forEach(p=>{
+    const g=ensure(p);
+    if(!g)return;
+    g.transactions.push({
+      id:p.id,
+      date:p.date||"",
+      dateKey:p.dateKey||"",
+      ref:p.voucherNo||"Voucher",
+      type:p.type==="credit"?"credit":"debit",
+      amount:Number(p.amount)||0,
+      note:p.note||"Payment Voucher"
+    });
+  });
+
+  return groups;
+}
+
+function renderVoucherCustomerList(){
+  const list=document.getElementById("voucherCustomerList");
+  if(!list)return;
+  const customers=Object.values(getCustomerTransactions()).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  list.innerHTML=customers.map(c=>
+    `<option value="${esc(c.mobile)}">${esc(c.name)} — ${esc(c.mobile)}</option>`
+  ).join("");
+}
+
+function voucherCustomerSelected(){
+  const q=document.getElementById("voucherCustomerSearch").value.trim().toLowerCase();
+  const c=Object.values(getCustomerTransactions()).find(x=>
+    x.mobile.toLowerCase()===q || x.name.toLowerCase()===q
+  );
+  if(!c)return;
+  document.getElementById("voucherCustomer").value=c.name||"";
+  document.getElementById("voucherMobile").value=c.mobile||"";
+  document.getElementById("voucherAddress").value=c.address||"";
+}
+
+
+function openCustomerLedger(){
+  document.querySelectorAll(".dashboardView,.ledgerRelated").forEach(el=>el.classList.add("hidden"));
+  const voucher=document.getElementById("paymentVoucherPanel");
+  if(voucher)voucher.classList.add("hidden");
+  const panel=document.getElementById("ledgerPanel");
+  if(!panel)return;
+  panel.classList.remove("hidden");
+  renderCustomerLedger();
+  renderCustomerWiseReport();
+  window.scrollTo(0,0);
+  setTimeout(function(){
+    const s=document.getElementById("ledgerSearch");
+    if(s)s.focus();
+  },80);
+}
+
+function openPaymentVoucher(){
+  document.querySelectorAll(".dashboardView,.ledgerRelated").forEach(el=>el.classList.add("hidden"));
+  const ledger=document.getElementById("ledgerPanel");
+  if(ledger)ledger.classList.add("hidden");
+  const panel=document.getElementById("paymentVoucherPanel");
+  if(!panel)return;
+
+  panel.classList.remove("hidden");
+
+  // Clear a fresh voucher and put focus on Customer.
+  document.getElementById("voucherCustomerSearch").value="";
+  document.getElementById("voucherCustomer").value="";
+  document.getElementById("voucherMobile").value="";
+  document.getElementById("voucherAddress").value="";
+  document.getElementById("voucherType").value="credit";
+  document.getElementById("voucherAmount").value="";
+  document.getElementById("voucherNote").value="";
+  document.getElementById("voucherMsg").textContent="";
+
+  setTimeout(function(){
+    document.getElementById("voucherCustomerSearch").focus();
+  },50);
+
+  panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function postPaymentVoucher(){
+  const customer=document.getElementById("voucherCustomer").value.trim();
+  const mobile=document.getElementById("voucherMobile").value.trim();
+  const address=document.getElementById("voucherAddress").value.trim();
+  const type=document.getElementById("voucherType").value;
+  const amount=Number(document.getElementById("voucherAmount").value);
+  const note=document.getElementById("voucherNote").value.trim();
+
+  if(!customer || !mobile){
+    alert("Customer Name aur Mobile enter karein."); return;
+  }
+  if(!Number.isFinite(amount) || amount<=0){
+    alert("Amount sahi enter karein."); return;
+  }
+
+  const voucher={
+    id:Date.now(),
+    voucherNo:"PV-"+String(Date.now()).slice(-6),
+    bookedBy:currentUser,
+    customer,
+    mobile,
+    address,
+    type:type==="credit"?"credit":"debit",
+    amount,
+    note,
+    date:new Date().toLocaleString("en-PK"),
+    dateKey:todayKey()
+  };
+
+  payments.unshift(voucher);
+  saveUserData();
+
+  document.getElementById("voucherMsg").textContent=
+    `${voucher.voucherNo} posted — ${voucher.type==="credit"?"Credit":"Debit"} Rs. ${money(amount)}`;
+
+  document.getElementById("voucherAmount").value="";
+  document.getElementById("voucherNote").value="";
+
+  renderVoucherCustomerList();
+  renderReportCustomerList();
+  renderCustomerLedgerList();
+  renderCustomerLedger();
+  renderCustomerWiseReport();
+
+  alert("Payment Voucher Post ho gaya ✅\n"+voucher.voucherNo+"\n"+voucher.type.toUpperCase()+" Rs. "+money(amount));
+}
+
+function renderReportCustomerList(){
+  const list=document.getElementById("reportCustomerList");
+  if(!list)return;
+  const customers=Object.values(getCustomerTransactions()).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  list.innerHTML=customers.map(c=>
+    `<option value="${esc(c.mobile)}">${esc(c.name)} — ${esc(c.mobile)}</option>`
+  ).join("");
+}
+
+function renderCustomerWiseReport(){
+  const box=document.getElementById("customerWiseReport");
+  const q=(document.getElementById("reportCustomerSearch")?.value||"").trim().toLowerCase();
+  if(!box)return;
+
+  let groups=Object.values(getCustomerTransactions());
+  if(q){
+    groups=groups.filter(c=>
+      String(c.name||"").toLowerCase().includes(q) ||
+      String(c.mobile||"").toLowerCase().includes(q)
+    );
+  }
+
+  groups.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+
+  if(!groups.length){
+    box.innerHTML='<div class="empty">Customer ka record nahi mila.</div>';
+    return;
+  }
+
+  box.innerHTML=groups.map(c=>{
+    const debit=c.transactions.filter(x=>x.type==="debit").reduce((s,x)=>s+x.amount,0);
+    const credit=c.transactions.filter(x=>x.type==="credit").reduce((s,x)=>s+x.amount,0);
+    const balance=debit-credit;
+
+    return `<div class="ledgerCustomer">
+      <div class="ledgerName">${esc(c.name)}</div>
+      <div class="muted">📱 ${esc(c.mobile)}${c.address?` • 📍 ${esc(c.address)}`:""}</div>
+      <div class="ledgerSummary">
+        <div class="ledgerStat">Debit <b>Rs. ${money(debit)}</b></div>
+        <div class="ledgerStat">Credit <b>Rs. ${money(credit)}</b></div>
+        <div class="ledgerStat">Balance <b>Rs. ${money(balance)}</b></div>
+        <div class="ledgerStat">Entries <b>${c.transactions.length}</b></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function getCustomers(){
+  const map={};
+  orders.forEach(o=>{
+    const key=(o.mobile||o.customer||"").trim().toLowerCase();
+    if(!key)return;
+    if(!map[key]) map[key]={name:o.customer,mobile:o.mobile,orders:0,sales:0};
+    map[key].orders++;
+    map[key].sales+=Number(o.grand)||0;
+    if(o.customer)map[key].name=o.customer;
+    if(o.mobile)map[key].mobile=o.mobile;
+  });
+  return Object.values(map);
+}
+function renderCustomerList(){
+  const list=document.getElementById("customerList");
+  if(!list)return;
+  list.innerHTML=getCustomers().map(c=>`<option value="${esc(c.mobile)}">${esc(c.name)} — ${esc(c.mobile)}</option>`).join("");
+}
+
+function getProducts(){
+  const map={};
+
+  // Products saved in the product catalog.
+  Object.values(productCatalog||{}).forEach(p=>{
+    if(!p)return;
+    const name=String(p.name||p.product||"").trim();
+    if(!name)return;
+    const key=name.toLowerCase();
+    map[key]={name,rate:Number(p.rate)||0};
+  });
+
+  // Also build the list from all saved orders, so old orders automatically
+  // become searchable products.
+  orders.forEach(o=>{
+    (o.items||[]).forEach(x=>{
+      const name=String(x.product||"").trim();
+      if(!name)return;
+      const key=name.toLowerCase();
+      if(!map[key]) map[key]={name,rate:Number(x.rate)||0};
+      else if(Number(x.rate)>=0) map[key].rate=Number(x.rate)||0;
+    });
+  });
+
+  return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name));
+}
+
+function renderProductList(){
+  const list=document.getElementById("productList");
+  if(!list)return;
+  list.innerHTML=getProducts().map(p=>
+    `<option value="${esc(p.name)}">${esc(p.name)} — Rs. ${money(p.rate)}</option>`
+  ).join("");
+}
+
+function renderCategorySelect(){
+  // Category Register removed.
+}
+
+function renderCategoryList(){
+  // Category Register removed.
+}
+
+function categoryChanged(){
+  // Category selection removed.
+}
+
+function orderProductChanged(){
+  const input=document.getElementById("orderProduct");
+  const q=(input?.value||"").trim().toLowerCase();
+  const p=getProducts().find(x=>x.name.toLowerCase()===q);
+  if(p){
+    document.getElementById("newRate").value=Number(p.rate)||0;
+  }
+  updateNewProductTotal();
+}
+
+function registerProduct(){
+  // Product Register removed.
+}
+
+function customerSelected(){
+  const q=document.getElementById("customerSearch").value.trim().toLowerCase();
+  const c=getCustomers().find(x=>x.mobile.toLowerCase()===q || x.name.toLowerCase()===q);
+  if(c){
+    document.getElementById("customer").value=c.name;
+    document.getElementById("mobile").value=c.mobile;
+    const latest=orders.filter(o=>(o.mobile||"")===c.mobile).sort((a,b)=>b.id-a.id)[0];
+    document.getElementById("address").value=latest?.address||"";
+    document.getElementById("customerHistory").textContent=
+      "Previous orders: "+c.orders+" • Previous sales: Rs. "+money(c.sales);
+  }
+}
+function newCustomer(){
+  document.getElementById("customerSearch").value="";
+  document.getElementById("customer").value="";
+  document.getElementById("mobile").value="";
+  document.getElementById("address").value="";
+  document.getElementById("customerHistory").textContent="New customer";
+  document.getElementById("customer").focus();
+}
+
+
+
+function showDashboard(){
+  document.querySelectorAll(".dashboardView").forEach(el=>el.classList.remove("hidden"));
+  document.querySelectorAll(".ledgerRelated").forEach(el=>el.classList.add("hidden"));
+  ["ledgerPanel","paymentVoucherPanel","pendingPanel","finalSummaryPanel","newOrderPanel"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.classList.add("hidden");
+  });
+  document.getElementById("newOrderLauncher")?.classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+function openNewOrder(){
+  document.getElementById("newOrderLauncher")?.classList.add("hidden");
+  document.getElementById("newOrderPanel")?.classList.remove("hidden");
+  window.scrollTo(0,0);
+  setTimeout(()=>document.getElementById("customer")?.focus(),120);
+}
+
+function togglePanel(id, btn){
+  const panel=document.getElementById(id);
+  if(!panel)return;
+  const hidden=panel.classList.toggle("hidden");
+  const span=btn.querySelector("span");
+  if(span)span.textContent=hidden?"＋":"−";
+  if(!hidden && id==="addItemPanel"){
+    setTimeout(()=>document.getElementById("registerProduct").focus(),120);
+  }
+}
+
+function focusNewItem(){
+  const box=document.querySelector(".productEntry");
+  if(box) box.scrollIntoView({behavior:"smooth",block:"center"});
+  setTimeout(()=>document.getElementById("newProduct").focus(),250);
+}
+
+function updateNewProductTotal(){
+  const q=Number(document.getElementById("newQty").value)||0;
+  const r=Number(document.getElementById("newRate").value)||0;
+  document.getElementById("newTotal").value="Rs. "+money(q*r);
+}
+
+function addProductFromBox(){
+  const product=document.getElementById("orderProduct").value.trim();
+  const qty=Number(document.getElementById("newQty").value);
+  const rate=Number(document.getElementById("newRate").value);
+
+  if(!product){alert("Product name enter karein.");return}
+  if(qty<=0 || !Number.isFinite(qty)){alert("Qty sahi enter karein.");return}
+  if(rate<0 || !Number.isFinite(rate)){alert("Rate sahi enter karein.");return}
+
+  // Product ko customer ki tarah permanently save karo, taake
+  // next order mein Product search bar mein show ho.
+  const productKey=product.toLowerCase();
+  productCatalog[productKey]={name:product,rate};
+  saveUserData();
+
+  items.push({
+    id:Date.now()+Math.random(),
+    product,
+    qty,
+    rate
+  });
+
+  renderProductList();
+  renderItems();
+
+  document.getElementById("orderProduct").value="";
+  document.getElementById("newQty").value=1;
+  document.getElementById("newRate").value="";
+  document.getElementById("newTotal").value="Rs. 0.00";
+}
+
+function addItem(product="",qty=1,rate=""){
+  items.push({id:Date.now()+Math.random(),product,qty,rate});
+  renderItems();
+}
+function renderItems(){
+  document.getElementById("items").innerHTML=items.map((x,i)=>`
+  <div class="item">
+    <label>Product ${i+1}</label>
+    <input value="${esc(x.product)}" placeholder="Product name" oninput="items[${i}].product=this.value">
+    <div class="itemgrid">
+      <div><label>Qty</label><input type="number" min="1" value="${x.qty}" oninput="items[${i}].qty=this.value;updateTotals()"></div>
+      <div><label>Rate</label><input type="number" min="0" step="0.01" value="${x.rate}" oninput="items[${i}].rate=this.value;updateTotals()"></div>
+      <div><label>Total</label><input readonly id="it${i}" value="${money((Number(x.qty)||0)*(Number(x.rate)||0))}"></div>
+    </div>
+    <button class="remove" onclick="removeItem(${i})">🗑️ Remove</button>
+  </div>`).join("");
+  updateTotals();
+}
+function removeItem(i){
+  if(items.length===1){alert("At least one item is required.");return}
+  items.splice(i,1);renderItems();
+}
+function updateTotals(){
+  let t=0;
+  items.forEach((x,i)=>{
+    let v=(Number(x.qty)||0)*(Number(x.rate)||0);t+=v;
+    let el=document.getElementById("it"+i);if(el)el.value=money(v);
+  });
+  document.getElementById("grandTotal").textContent="Rs. "+money(t);
+}
+
+function saveOrder(){
+  const customer=document.getElementById("customer").value.trim();
+  const mobile=document.getElementById("mobile").value.trim();
+
+  if(!customer||!mobile){alert("Customer Name aur Mobile enter karein.");return}
+  if(!items.length){alert("Kam az kam 1 product add karein.");return}
+
+  for(const x of items){
+    if(!String(x.product).trim()||Number(x.qty)<=0||!Number.isFinite(Number(x.qty))||Number(x.rate)<0||!Number.isFinite(Number(x.rate))){
+      alert("Har item ka Product, Qty aur Rate sahi enter karein.");return;
+    }
+  }
+
+  // Convert every value to a real number before calculating/saving.
+  const clean=items.map(x=>{
+    const qty=Number(x.qty);
+    const rate=Number(x.rate);
+    const total=qty*rate;
+    return {product:String(x.product).trim(),qty,rate,total};
+  });
+
+  const grand=clean.reduce((sum,x)=>sum+Number(x.total),0);
+
+  // Har order ke products ko catalog mein save/update karo.
+  clean.forEach(x=>{
+    const key=x.product.toLowerCase();
+    productCatalog[key]={name:x.product,rate:Number(x.rate)||0};
+  });
+
+  const order={
+    id:Date.now(),
+    orderNo:"ORD-"+String(Date.now()).slice(-6),
+    bookedBy:currentUser,
+    customer,
+    mobile,
+    address:document.getElementById("address").value.trim(),
+    items:clean,
+    grand:Number(grand),
+    date:new Date().toLocaleString("en-PK"),
+    dateKey:todayKey()
+  };
+
+  orders.unshift(order);
+  saveUserData();
+
+  // WhatsApp confirmation.
+  let waNumber = mobile.replace(/\D/g,"");
+  if(waNumber.startsWith("0")) waNumber="92"+waNumber.slice(1);
+  const waText = encodeURIComponent(
+    "Assalam-o-Alaikum " + customer + "\n\n" +
+    "Aap ka order successfully book ho gaya hai.\n" +
+    "Order Number: " + order.orderNo + "\n" +
+    "Order Amount: Rs. " + money(grand) + "\n" +
+    "Date: " + order.date + "\n\n" +
+    "Habib Naveed Confectionery CSP"
+  );
+  const waUrl = "https://wa.me/" + waNumber + "?text=" + waText;
+
+  document.getElementById("customer").value="";
+  document.getElementById("mobile").value="";
+  document.getElementById("customerSearch").value="";
+  document.getElementById("customerHistory").textContent="";
+  items=[];
+  renderItems();
+  renderOrders();
+  updateSummary();
+  renderCustomerList();
+  renderVoucherCustomerList();
+  renderReportCustomerList();
+  renderCustomerLedgerList();
+  renderProductList();
+  renderCategoryList();
+  renderCategorySelect();
+  renderProductList();
+  updateNewProductTotal();
+  updateFinalSummaryButton();
+
+  alert("Order saved successfully ✅\n\nAmount: Rs. "+money(grand)+"\nOrder No: "+order.orderNo+"\n\nWhatsApp message tayyar hai.");
+  window.open(waUrl,"_blank");
+  showDashboard();
+}
+
+function getPendingOrders(){
+  return orders.filter(o=>(o.status||"pending")==="pending");
+}
+function renderPendingOrders(){
+  const box=document.getElementById("pendingOrders");
+  const badge=document.getElementById("pendingCount");
+  if(!box)return;
+  const list=getPendingOrders();
+  badge.textContent=list.length;
+  if(!list.length){
+    box.innerHTML='<div class="empty">No pending orders. 🎉</div>';
+    return;
+  }
+  box.innerHTML=list.map(o=>`
+    <div class="pendingOrder">
+      <div class="pendingTitle">${esc(o.orderNo)} — ${esc(o.customer)}</div>
+      <div class="pendingMeta">📱 ${esc(o.mobile)} • 📍 ${esc(o.address||"No address")} • ${esc(o.date)}</div>
+      ${o.items.map(x=>`<div class="row"><span>${esc(x.product)} × ${x.qty}</span><b>Rs. ${money(x.total)}</b></div>`).join("")}
+      <div class="grand">Rs. ${money(o.grand)}</div>
+      <button class="completeBtn" onclick="completeOrder(${o.id})">✅ Order Complete</button>
+    </div>`).join("");
+}
+function completeOrder(id){
+  const o=orders.find(x=>x.id===id);
+  if(!o)return;
+  if(!confirm("Mark "+o.orderNo+" as complete?"))return;
+  o.status="completed";
+  o.completedAt=new Date().toLocaleString("en-PK");
+  saveUserData();
+  renderPendingOrders();
+  renderOrders();
+  updateSummary();
+}
+
+function deleteOrder(id){
+  if(!confirm("Delete this complete order?"))return;
+  orders=orders.filter(o=>o.id!==id);
+  saveUserData();renderOrders();renderPendingOrders();updateSummary();renderCustomerList();renderVoucherCustomerList();renderReportCustomerList();renderCustomerLedgerList();renderCustomerLedger();renderCustomerWiseReport();renderProductList();updateFinalSummaryButton();
+}
+
+function renderCustomerLedgerList(){
+  const list=document.getElementById("ledgerCustomerList");
+  if(!list)return;
+  list.innerHTML=getCustomers().sort((a,b)=>String(a.name).localeCompare(String(b.name)))
+    .map(c=>`<option value="${esc(c.mobile)}">${esc(c.name)} — ${esc(c.mobile)}</option>`).join("");
+}
+function renderCustomerLedger(){
+  const box=document.getElementById("customerLedger");
+  const q=(document.getElementById("ledgerSearch")?.value||"").trim().toLowerCase();
+  if(!box)return;
+
+  const groups=getCustomerTransactions();
+  let customers=Object.values(groups);
+  if(q){
+    customers=customers.filter(c=>
+      String(c.name||"").toLowerCase().includes(q) ||
+      String(c.mobile||"").toLowerCase().includes(q)
+    );
+  }
+
+  customers.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+
+  if(!customers.length){
+    box.innerHTML='<div class="empty">Customer ka record nahi mila.</div>';
+    return;
+  }
+
+  box.innerHTML=customers.map(c=>{
+    const tx=c.transactions.sort((a,b)=>(b.id||0)-(a.id||0));
+    let debit=0,credit=0;
+    tx.forEach(x=>x.type==="debit"?debit+=x.amount:credit+=x.amount);
+    const balance=debit-credit;
+
+    const rows=tx.map(x=>`
+      <tr>
+        <td>${esc(x.ref)}</td>
+        <td>${esc(x.dateKey||"")}</td>
+        <td>${esc(x.note||"")}</td>
+        <td>${x.type==="debit"?"Rs. "+money(x.amount):"—"}</td>
+        <td>${x.type==="credit"?"Rs. "+money(x.amount):"—"}</td>
+        <td>${x.type==="debit"?"Debit":"Credit"}</td>
+      </tr>`).join("");
+
+    return `<div class="ledgerCustomer">
+      <div class="ledgerName">${esc(c.name)}</div>
+      <div class="muted">📱 ${esc(c.mobile)}${c.address?` • 📍 ${esc(c.address)}`:""}</div>
+      <div class="ledgerSummary">
+        <div class="ledgerStat">Debit <b>Rs. ${money(debit)}</b></div>
+        <div class="ledgerStat">Credit <b>Rs. ${money(credit)}</b></div>
+        <div class="ledgerStat">Balance <b>Rs. ${money(balance)}</b></div>
+        <div class="ledgerStat">Entries <b>${tx.length}</b></div>
+      </div>
+      <div style="overflow:auto">
+        <table class="ledgerTable">
+          <tr><th>Ref</th><th>Date</th><th>Details</th><th>Debit</th><th>Credit</th><th>Type</th></tr>
+          ${rows}
+        </table>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+
+function customerLedgerPDF(){
+  const q=(document.getElementById("ledgerSearch")?.value||"").trim().toLowerCase();
+  const groups=getCustomerTransactions();
+  let customers=Object.values(groups);
+
+  if(q){
+    customers=customers.filter(c=>
+      String(c.name||"").toLowerCase().includes(q) ||
+      String(c.mobile||"").toLowerCase().includes(q)
+    );
+  }
+
+  customers.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+
+  if(!customers.length){
+    alert("Customer Ledger mein koi record nahi hai.");
+    return;
+  }
+
+  const pages=customers.map((c,index)=>{
+    const tx=[...c.transactions].sort((a,b)=>(a.id||0)-(b.id||0));
+    let debit=0,credit=0;
+    tx.forEach(x=>x.type==="debit"?debit+=x.amount:credit+=x.amount);
+    const balance=debit-credit;
+
+    const rows=tx.map(x=>`<tr>
+      <td>${esc(x.dateKey||"")}</td>
+      <td>${esc(x.ref||"")}</td>
+      <td>${esc(x.note||"")}</td>
+      <td class="right">${x.type==="debit"?money(x.amount):""}</td>
+      <td class="right">${x.type==="credit"?money(x.amount):""}</td>
+    </tr>`).join("");
+
+    return `<div class="ledgerReceipt ${index<customers.length-1?'pageBreak':''}">
+      <div class="receiptHeader">
+        <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
+        <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+        <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
+        <div class="invoiceTitle">CUSTOMER LEDGER</div>
+      </div>
+
+      <div class="invoiceInfo">
+        <div><b>Customer:</b> ${esc(c.name||"")}</div>
+        <div><b>Mobile:</b> ${esc(c.mobile||"")}</div>
+        ${c.address?`<div><b>Address:</b> ${esc(c.address)}</div>`:""}
+        <div><b>Report Date:</b> ${esc(new Date().toLocaleDateString("en-PK"))}</div>
+      </div>
+
+      <table class="receiptTable">
+        <tr>
+          <th>Date</th><th>Ref</th><th>Details</th><th>Debit</th><th>Credit</th>
+        </tr>
+        ${rows}
+      </table>
+
+      <div class="receiptTotals">
+        <div><span>Total Debit</span><b>Rs. ${money(debit)}</b></div>
+        <div><span>Total Credit</span><b>Rs. ${money(credit)}</b></div>
+        <div class="grandReceipt"><span>Balance</span><b>Rs. ${money(balance)}</b></div>
+      </div>
+
+      <div class="receiptFooter">
+        <div>Customer Wise Ledger</div>
+        <div>Design by Rashid Javed • 0314-6775046</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  printPDF("Customer Ledger",pages);
+}
+
+function renderOrders(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  const list=orders.filter(o=>
+    o.customer.toLowerCase().includes(q)||
+    o.mobile.toLowerCase().includes(q)||
+    o.items.some(x=>x.product.toLowerCase().includes(q))
+  );
+  const box=document.getElementById("orders");
+  if(!list.length){box.innerHTML='<div class="empty">No orders found.</div>';return}
+  box.innerHTML=list.map(o=>`
+  <div class="order">
+    <div class="orderhead">
+      <div><div class="name">${esc(o.customer)}</div><div class="muted">${esc(o.orderNo)} • 📱 ${esc(o.mobile)} • 📍 ${esc(o.address||"No address")}</div></div>
+      <button class="danger" onclick="deleteOrder(${o.id})">Delete</button>
+    </div>
+    ${o.items.map(x=>`<div class="row"><span>${esc(x.product)} × ${x.qty}</span><b>Rs. ${money(x.total)}</b></div>`).join("")}
+    <div class="grand">Grand Total: Rs. ${money(o.grand)}</div>
+    <div class="muted">🕒 ${esc(o.date)} • 👤 ${esc(o.bookedBy||currentUser)} • ${o.status==="completed"?"✅ Completed":"⏳ Pending"}</div>
+    <button class="pdf" style="margin-top:10px;width:100%" onclick="singleOrderPDF(${o.id})">📄 Generate Order PDF</button>
+  </div>`).join("");
+}
+function getTodayOrders(){return orders.filter(o=>o.dateKey===todayKey())}
+
+
+function openSummaryList(type){
+  const overlay=document.getElementById("summaryListOverlay");
+  const title=document.getElementById("summaryListTitle");
+  const box=document.getElementById("summaryListContent");
+  if(!overlay||!box)return;
+  overlay.classList.remove("hidden");
+  document.body.style.overflow="hidden";
+
+  const a=getTodayOrders();
+
+  if(type==="orders"){
+    title.textContent="📦 Today — Orders";
+    box.innerHTML=a.length ? a.map(o=>`
+      <div class="summaryListRow" onclick="showSummaryOrder(${o.id})">
+        <b>${esc(o.orderNo)}</b>
+        <div class="summaryListMeta">${esc(o.customer)} • 📱 ${esc(o.mobile)}</div>
+        <div class="summaryListMeta">${o.status==="completed"?"✅ Completed":"⏳ Pending"} • Rs. ${money(o.grand)}</div>
+      </div>`).join("") : '<div class="empty">Aaj koi order nahi.</div>';
+  }
+
+  if(type==="items"){
+    title.textContent="🛒 Today — Items";
+    const map={};
+    a.forEach(o=>o.items.forEach(x=>{
+      const key=(x.category||"")+"|"+x.product;
+      if(!map[key])map[key]={category:x.category||"",product:x.product,qty:0,amount:0};
+      map[key].qty+=Number(x.qty)||0;
+      map[key].amount+=Number(x.total)||0;
+    }));
+    const rows=Object.values(map).sort((x,y)=>x.product.localeCompare(y.product));
+    box.innerHTML=rows.length ? rows.map(x=>`
+      <div class="summaryListRow">
+        <b>${esc(x.product)}</b>
+        <div class="summaryListMeta">Total Qty: ${x.qty} • Amount: Rs. ${money(x.amount)}</div>
+      </div>`).join("") : '<div class="empty">Aaj koi item nahi.</div>';
+  }
+
+  if(type==="customers"){
+    title.textContent="👤 Today — Customers";
+    const map={};
+    a.forEach(o=>{
+      const key=o.mobile||o.customer;
+      if(!map[key])map[key]={name:o.customer||"",mobile:o.mobile||"",orders:0,sales:0};
+      map[key].orders++;
+      map[key].sales+=Number(o.grand)||0;
+    });
+    const rows=Object.values(map).sort((x,y)=>x.name.localeCompare(y.name));
+    box.innerHTML=rows.length ? rows.map(x=>`
+      <div class="summaryListRow">
+        <b>${esc(x.name)}</b>
+        <div class="summaryListMeta">📱 ${esc(x.mobile)} • Orders: ${x.orders} • Sales: Rs. ${money(x.sales)}</div>
+      </div>`).join("") : '<div class="empty">Aaj koi customer nahi.</div>';
+  }
+
+  if(type==="sales"){
+    title.textContent="💰 Today — Sales";
+    const total=a.reduce((s,o)=>s+(Number(o.grand)||0),0);
+    box.innerHTML=`
+      <div class="summaryDetailCard">
+        <div class="summaryDetailLine"><b>Total Orders</b><b>${a.length}</b></div>
+        <div class="summaryDetailLine"><b>Total Sales</b><b>Rs. ${money(total)}</b></div>
+      </div>
+      ${a.map(o=>`<div class="summaryListRow" onclick="showSummaryOrder(${o.id})">
+        <b>${esc(o.orderNo)}</b>
+        <div class="summaryListMeta">${esc(o.customer)} • ${o.status==="completed"?"✅ Completed":"⏳ Pending"}</div>
+        <div class="summaryListMeta">Rs. ${money(o.grand)}</div>
+      </div>`).join("")}`;
+  }
+}
+
+function showSummaryOrder(id){
+  const o=orders.find(x=>x.id===id);
+  if(!o)return;
+  const title=document.getElementById("summaryListTitle");
+  const box=document.getElementById("summaryListContent");
+  title.textContent=o.orderNo;
+  box.innerHTML=`
+    <button class="summaryBack" onclick="openSummaryList('orders')">← Back to Orders</button>
+    <div class="summaryDetailCard">
+      <div class="summaryDetailLine"><b>Customer</b><span>${esc(o.customer)}</span></div>
+      <div class="summaryDetailLine"><b>Mobile</b><span>${esc(o.mobile)}</span></div>
+      <div class="summaryDetailLine"><b>Address</b><span>${esc(o.address||"")}</span></div>
+      <div class="summaryDetailLine"><b>Status</b><span>${o.status==="completed"?"✅ Completed":"⏳ Pending"}</span></div>
+      <div class="summaryDetailLine"><b>Total</b><b>Rs. ${money(o.grand)}</b></div>
+    </div>
+    <div class="summaryDetailCard">
+      <h3>Items</h3>
+      ${o.items.map(x=>`<div class="summaryDetailLine">
+        <span>${esc(x.product)} × ${x.qty}</span>
+        <span>Rs. ${money(x.total)}</span>
+      </div>`).join("")}
+    </div>`;
+}
+
+function closeSummaryList(){
+  const overlay=document.getElementById("summaryListOverlay");
+  if(overlay)overlay.classList.add("hidden");
+  document.body.style.overflow="";
+}
+
+function toggleTodaySummary(){
+  const panel=document.getElementById("todaySummaryDetails");
+  const dots=document.getElementById("summaryDots");
+  if(!panel)return;
+  const hidden=panel.classList.toggle("hidden");
+  if(dots)dots.textContent=hidden?"•••":"−";
+  document.body.style.overflow=hidden?"":"hidden";
+  if(!hidden)renderTodayDetails();
+}
+function renderTodayDetails(){
+  const box=document.getElementById("todayDetailsContent");
+  if(!box)return;
+  const a=getTodayOrders();
+  if(!a.length){
+    box.innerHTML='<div class="empty">Aaj abhi koi order nahi hai.</div>';
+    return;
+  }
+  box.innerHTML=a.map(o=>`
+    <div class="todayOrderDetail">
+      <div class="todayOrderHead">
+        <div><b>${esc(o.orderNo)}</b><div class="muted">${esc(o.customer)} • 📱 ${esc(o.mobile)}</div><div class="muted">📍 ${esc(o.address||"No address")}</div></div>
+        <b>Rs. ${money(o.grand)}</b>
+      </div>
+      ${o.items.map(x=>`<div class="todayItem"><span>${esc(x.product)} × ${x.qty} @ Rs. ${money(x.rate)}</span><b>Rs. ${money(x.total)}</b></div>`).join("")}
+      <div class="todayGrand">${o.status==="completed"?"✅ Completed":"⏳ Pending"} • Rs. ${money(o.grand)}</div>
+    </div>`).join("");
+}
+
+function updateSummary(){
+  const a=getTodayOrders();
+  const itemCount=a.reduce((s,o)=>s+o.items.reduce((x,i)=>x+i.qty,0),0);
+  const sales=a.reduce((s,o)=>s+o.grand,0);
+  const customers=new Set(a.map(o=>o.mobile||o.customer)).size;
+  document.getElementById("todayOrders").textContent=a.length;
+  document.getElementById("todayItems").textContent=itemCount;
+  document.getElementById("todayCustomers").textContent=customers;
+  document.getElementById("todaySales").textContent="Rs. "+money(sales);
+  const panel=document.getElementById("todaySummaryDetails");
+  if(panel && !panel.classList.contains("hidden")) renderTodayDetails();
+}
+
+function allOrdersCompleted(){
+  return orders.length>0 && orders.every(o=>(o.status||"pending")==="completed");
+}
+
+function updateFinalSummaryButton(){
+  const btn=document.getElementById("finalSummaryBtn");
+  const status=document.getElementById("finalSummaryStatus");
+  const msg=document.getElementById("finalSummaryMessage");
+  if(!btn || !status || !msg)return;
+
+  if(!orders.length){
+    btn.disabled=true;
+    status.textContent="No Orders";
+    msg.textContent="Pehle order save karein.";
+    return;
+  }
+
+  if(allOrdersCompleted()){
+    btn.disabled=false;
+    status.textContent="All Complete";
+    msg.textContent="Sab orders complete ho gaye hain. Final Summary PDF ready hai.";
+  }else{
+    btn.disabled=true;
+    const pending=getPendingOrders().length;
+    status.textContent=pending+" Pending";
+    msg.textContent="Final Summary PDF ke liye tamam orders complete karein.";
+  }
+}
+
+function finalSummaryPDF(){
+  if(!allOrdersCompleted()){
+    alert("Final Summary PDF banane se pehle tamam orders complete karein.");
+    return;
+  }
+
+  const items=orders.reduce((s,o)=>s+o.items.reduce((x,i)=>x+Number(i.qty||0),0),0);
+  const sales=orders.reduce((s,o)=>s+Number(o.grand||0),0);
+  const customers=new Set(orders.map(o=>o.mobile||o.customer)).size;
+
+  let rows=orders.map(o=>`
+    <tr>
+      <td>${esc(o.orderNo)}</td>
+      <td>${esc(o.date)}</td>
+      <td>${esc(o.customer)}</td>
+      <td>${esc(o.mobile)}</td>
+      <td>Completed</td>
+      <td>${o.items.reduce((s,i)=>s+Number(i.qty||0),0)}</td>
+      <td class="right">Rs. ${money(o.grand)}</td>
+    </tr>`).join("");
+
+  const body=`<h1>HABIB NAVEED CONFECTIONERY CSP</h1>
+  <h2>Final Summary Report</h2>
+  <div class="meta"><b>User:</b> ${esc(currentUser)}</div>
+  <div class="meta"><b>Date:</b> ${todayKey()}</div>
+  <div class="meta"><b>Total Orders:</b> ${orders.length}</div>
+  <div class="meta"><b>Total Items:</b> ${items}</div>
+  <div class="meta"><b>Total Customers:</b> ${customers}</div>
+  <div class="meta"><b>Total Sales:</b> Rs. ${money(sales)}</div>
+  <table>
+    <tr><th>Order No</th><th>Date</th><th>Customer</th><th>Mobile</th><th>Status</th><th>Items</th><th>Amount</th></tr>
+    ${rows}
+  </table>
+  <div class="total">Final Total Sales: Rs. ${money(sales)}</div>
+  <div class="meta" style="text-align:center;margin-top:24px">All orders completed successfully.</div>
+  <div class="meta" style="text-align:center;margin-top:10px">Design by Rashid Javed • 0314-6775046</div>`;
+
+  printPDF("Final Summary",body);
+}
+
+function printPDF(title,body){
+  const w=window.open("","_blank");
+  if(!w){alert("Popup blocked. Please allow popups for this file.");return}
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
+  <style>
+  /* Exact invoice/PDF paper: 3.2 x 8.4 inches = 81.28 x 213.36 mm */
+  @page{size:3.2in 8.4in;margin:0}
+  html,body{width:81.28mm;height:213.36mm;min-height:213.36mm;margin:0;padding:0}
+  body{font-family:Calibri,"Segoe UI",Arial,sans-serif;width:3.2in;height:8.4in;min-height:8.4in;margin:0;padding:0.2in 0.1in;color:#111;font-size:10px;overflow:hidden;box-sizing:border-box}
+  h1{font-size:14px;text-align:center;margin:0 0 3px}
+  h2{font-size:12px;margin:5px 0}
+  table{width:100%;border-collapse:collapse;margin-top:5px;font-size:9px}
+  th,td{border-bottom:1px solid #777;padding:3px 1px;text-align:left}th{border-top:1px solid #777}
+  .right{text-align:right}.total{font-size:13px;font-weight:bold;text-align:right;margin-top:7px}
+  .meta{margin:2px 0;color:#222;font-size:9px}
+  .printNow{width:100%;background:#1f6feb;color:#fff;border:0;border-radius:6px;padding:7px;margin-bottom:8px;font-weight:bold}
+  @media print{button{display:none!important}html,body{width:3.2in!important;height:8.4in!important;min-height:8.4in!important;margin:0!important;padding:0!important}body{padding:0.2in 0.1in!important;box-sizing:border-box!important;overflow:hidden!important}.receipt,.ledgerReceipt{width:3.0in!important;max-width:3.0in!important;min-height:8.0in!important;margin:0 auto!important;box-sizing:border-box!important;overflow:hidden!important}.receiptTable{width:3.0in!important;max-width:3.0in!important;table-layout:fixed!important}}
+  .pageBreak{page-break-after:always;break-after:page;break-inside:avoid;}
+  .ledgerCustomer{border:1px solid #bbb;border-radius:8px;padding:10px;margin-top:10px}
+  .ledgerName{font-size:15px;font-weight:bold}
+  .ledgerSummary{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:8px 0}
+  .ledgerStat{background:#f4f4f4;border-radius:6px;padding:7px;font-size:11px}
+  .ledgerStat b{display:block;margin-top:2px}
+  .ledgerTable{width:100%;border-collapse:collapse;font-size:9px}
+  .ledgerTable th,.ledgerTable td{border:1px solid #bbb;padding:4px}
+  .ledgerTable th{background:#eee}
+  .ledgerReceipt{width:3.0in;max-width:3.0in;min-height:8.0in;margin:0 auto;box-sizing:border-box;overflow:hidden}
+  .ledgerReceipt .receiptTable th,.ledgerReceipt .receiptTable td{font-size:8.5px;padding:3px 2px}
+  .ledgerReceipt .receiptTable th{white-space:nowrap}
+  .receipt{width:3.0in;max-width:3.0in;min-height:8.0in;margin:0 auto;box-sizing:border-box;overflow:hidden}
+  .receiptHeader{text-align:center;border-bottom:2px solid #111;padding-bottom:6px;margin-bottom:7px}
+  .receiptTitle{font-size:17px;font-weight:bold;line-height:1.2}
+  .receiptSub{font-size:10px;font-weight:bold;margin-top:2px}
+  .receiptPhones{font-size:10px;font-weight:bold;margin-top:4px}
+  .invoiceTitle{font-size:15px;font-weight:bold;margin-top:5px}
+  .invoiceInfo{font-size:10px;line-height:1.35;border-bottom:1px solid #777;padding-bottom:5px;margin-bottom:5px}.infoTop{display:flex;justify-content:space-between;gap:8px;white-space:nowrap}.customerLine{font-weight:800;white-space:nowrap;overflow:hidden}.mobileAddressLine{display:flex;gap:8px;white-space:nowrap;overflow:hidden}.mobileAddressLine>span{min-width:0;overflow:hidden}
+  .receiptTable{width:3.0in;max-width:3.0in;margin-top:4px;table-layout:fixed}
+  .receiptTable th,.receiptTable td{border:1px solid #777;padding:4px 3px;font-size:9px}
+  .receiptTable th{font-weight:bold}
+  .receiptTable .desc{width:48%;word-break:break-word}
+  .receiptTotals{margin-top:7px;border-top:1px solid #111;padding-top:5px;font-size:10px}
+  .receiptTotals>div{display:flex;justify-content:space-between;padding:2px 0}
+  .grandReceipt{font-size:14px;border-top:2px solid #111;margin-top:3px;padding-top:4px}
+  .receiptFooter{text-align:center;font-size:9px;margin-top:14px;border-top:1px dashed #777;padding-top:7px;line-height:1.6}
+  </style>
+<style>
+#installAppBtn{
+  display:none;position:fixed;right:12px;bottom:12px;z-index:10001;
+  background:#1f6feb;color:#fff;border:0;border-radius:999px;
+  padding:12px 16px;font-weight:700;font-size:14px;
+  box-shadow:0 4px 16px #0003
+}
+</style>
+<button id="installAppBtn" onclick="installPWA()">📲 Install App</button>
+
+</head><body><button class="printNow" onclick="window.print()">🖨️ Print</button>${body}
+  <script>window.onload=function(){window.focus()}<\/script>
+<div id="summaryListOverlay" class="summaryListOverlay hidden">
+  <div class="summaryListTop">
+    <h2 id="summaryListTitle">Details</h2>
+    <button class="closeToday" onclick="closeSummaryList()">✖</button>
+  </div>
+  <div id="summaryListContent"></div>
+</div>
+
+
+
+</body></html>`);
+  w.document.close();
+}
+function singleOrderPDF(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+
+  const rows=o.items.map(x=>`<tr>
+    <td class="desc">${esc(x.product)}</td>
+    <td>${x.qty}</td>
+    <td class="right">${money(x.rate)}</td>
+    <td class="right">${money(x.total)}</td>
+  </tr>`).join("");
+
+  const body=`<div class="receipt">
+    <div class="receiptHeader">
+      <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
+      <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+      <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
+      <div class="invoiceTitle">SALE INVOICE</div>
+    </div>
+
+    <div class="invoiceInfo">
+      <div><b>Invoice No:</b> ${esc(o.orderNo)}</div>
+      <div><b>Date:</b> ${esc(o.date)}</div>
+      <div><b>Customer:</b> ${esc(o.customer)}</div>
+      <div><b>Mobile:</b> ${esc(o.mobile)}</div>
+      ${o.address?`<div><b>Address:</b> ${esc(o.address)}</div>`:""}
+    </div>
+
+    <table class="receiptTable">
+      <tr>
+        <th class="desc">Detail</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>Amount</th>
+      </tr>
+      ${rows}
+    </table>
+
+    <div class="receiptTotals">
+      <div><span>Total Items</span><b>${o.items.reduce((s,x)=>s+Number(x.qty||0),0)}</b></div>
+      <div class="grandReceipt"><span>Grand Total</span><b>Rs. ${money(o.grand)}</b></div>
+    </div>
+
+    <div class="receiptFooter">
+      <div>Thank you for your business</div>
+      <div>Design by Rashid Javed • 0314-6775046</div>
+    </div>
+  </div>`;
+
+  printPDF("Order "+o.orderNo,body);
+}
+
+
+
+
+function todayAllSavePDF(){
+  const today=getTodayOrders();
+  if(!today.length){
+    alert("Aaj koi order nahi hai.");
+    return;
+  }
+
+  const pages=today.map((o,index)=>{
+    const rows=o.items.map(x=>`<tr>
+      <td class="desc">${esc(x.product)}</td>
+      <td>${x.qty}</td>
+      <td class="right">${money(x.rate)}</td>
+      <td class="right">${money(x.total)}</td>
+    </tr>`).join("");
+
+    return `<div class="receipt ${index<today.length-1?'pageBreak':''}">
+      <div class="receiptHeader">
+        <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
+        <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+        <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
+        <div class="invoiceTitle">SALE INVOICE</div>
+      </div>
+      <div class="invoiceInfo">
+        <div class="infoTop"><span><b>Invoice No:</b> ${esc(o.orderNo)}</span><span><b>Date:</b> ${esc(o.date)}</span></div>
+        <div class="customerLine"><b>Customer:</b> ${esc(o.customer)}</div>
+        <div class="mobileAddressLine"><span><b>Mobile:</b> ${esc(o.mobile)}</span>${o.address?`<span><b>Address:</b> ${esc(o.address)}</span>`:""}</div>
+      </div>
+      <table class="receiptTable">
+        <tr><th class="desc">Detail</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>
+        ${rows}
+      </table>
+      <div class="receiptTotals">
+        <div><span>Total Items</span><b>${o.items.reduce((s,x)=>s+Number(x.qty||0),0)}</b></div>
+        <div class="grandReceipt"><span>Grand Total</span><b>Rs. ${money(o.grand)}</b></div>
+      </div>
+      <div class="receiptFooter">
+        <div>Thank you for your business</div>
+        <div>Design by Rashid Javed • 0314-6775046</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Existing printPDF() is used so the established 3.2 × 8.4 inch print CSS is retained.
+  printPDF("Today All Print",pages);
+}
+
+function todayAllPrint(){
+  const a=getTodayOrders();
+  if(!a.length){
+    alert("Aaj koi order nahi hai.");
+    return;
+  }
+
+  const pages=a.map((o,index)=>{
+    const rows=o.items.map(x=>`<tr>
+      <td class="desc">${esc(x.product)}</td>
+      <td>${x.qty}</td>
+      <td class="right">${money(x.rate)}</td>
+      <td class="right">${money(x.total)}</td>
+    </tr>`).join("");
+
+    return `<div class="receipt ${index<a.length-1?'pageBreak':''}">
+      <div class="receiptHeader">
+        <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
+        <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+        <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
+        <div class="invoiceTitle">SALE INVOICE</div>
+      </div>
+
+      <div class="invoiceInfo">
+        <div class="infoTop"><span><b>Invoice No:</b> ${esc(o.orderNo)}</span><span><b>Date:</b> ${esc(o.date)}</span></div>
+        <div class="customerLine"><b>Customer:</b> ${esc(o.customer)}</div>
+        <div class="mobileAddressLine"><span><b>Mobile:</b> ${esc(o.mobile)}</span>${o.address?`<span><b>Address:</b> ${esc(o.address)}</span>`:""}</div>
+      </div>
+
+      <table class="receiptTable">
+        <tr>
+          <th class="desc">Detail</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Amount</th>
+        </tr>
+        ${rows}
+      </table>
+
+      <div class="receiptTotals">
+        <div><span>Total Items</span><b>${o.items.reduce((s,x)=>s+Number(x.qty||0),0)}</b></div>
+        <div class="grandReceipt"><span>Grand Total</span><b>Rs. ${money(o.grand)}</b></div>
+      </div>
+
+      <div class="receiptFooter">
+        <div>Thank you for your business</div>
+        <div>Design by Rashid Javed • 0314-6775046</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  printPDF("Today All Orders",pages);
+}
+
+function todaySummaryPDF(){
+  const a=getTodayOrders();
+  const items=a.reduce((s,o)=>s+o.items.reduce((x,i)=>x+i.qty,0),0);
+  const sales=a.reduce((s,o)=>s+o.grand,0);
+  const customers=new Set(a.map(o=>o.mobile||o.customer)).size;
+  let rows=a.map(o=>`<tr><td>${esc(o.orderNo)}</td><td>${esc(o.customer)}</td><td>${esc(o.mobile)}</td><td>${o.items.reduce((s,i)=>s+i.qty,0)}</td><td class="right">Rs. ${money(o.grand)}</td></tr>`).join("");
+  if(!rows)rows='<tr><td colspan="5">No orders today.</td></tr>';
+  const body=`<h1>HABIB NAVEED CONFECTIONERY CSP</h1><h2>Today Summary - ${esc(currentUser)}</h2>
+  <div class="meta"><b>Date:</b> ${todayKey()}</div>
+  <div class="meta"><b>Total Orders:</b> ${a.length}</div>
+  <div class="meta"><b>Total Items:</b> ${items}</div>
+  <div class="meta"><b>Customers:</b> ${customers}</div>
+  <div class="meta"><b>Total Sales:</b> Rs. ${money(sales)}</div>
+  <table><tr><th>Order No</th><th>Customer</th><th>Mobile</th><th>Items</th><th>Amount</th></tr>${rows}</table>
+  <div class="total">Today Sales: Rs. ${money(sales)}</div><div class="meta" style="text-align:center;margin-top:24px">Design by Rashid Javed • 0314-6775046</div>`;
+  printPDF("Today Summary",body);
+}
+function allOrdersPDF(){
+  const items=orders.reduce((s,o)=>s+o.items.reduce((x,i)=>x+i.qty,0),0);
+  const sales=orders.reduce((s,o)=>s+o.grand,0);
+  let rows=orders.map(o=>`<tr><td>${esc(o.orderNo)}</td><td>${esc(o.date)}</td><td>${esc(o.customer)}</td><td>${esc(o.mobile)}</td><td>${o.items.reduce((s,i)=>s+i.qty,0)}</td><td class="right">Rs. ${money(o.grand)}</td></tr>`).join("");
+  if(!rows)rows='<tr><td colspan="6">No saved orders.</td></tr>';
+  const body=`<h1>HABIB NAVEED CONFECTIONERY CSP</h1><h2>Orders Report - ${esc(currentUser)}</h2>
+  <div class="meta"><b>Booker/User:</b> ${esc(currentUser)}</div>
+  <div class="meta"><b>Total Orders:</b> ${orders.length}</div>
+  <div class="meta"><b>Total Items:</b> ${items}</div>
+  <div class="meta"><b>Total Sales:</b> Rs. ${money(sales)}</div>
+  <table><tr><th>Order No</th><th>Date</th><th>Customer</th><th>Mobile</th><th>Items</th><th>Amount</th></tr>${rows}</table>
+  <div class="total">Total Sales: Rs. ${money(sales)}</div><div class="meta" style="text-align:center;margin-top:24px">Design by Rashid Javed • 0314-6775046</div>`;
+  printPDF("My Orders Report",body);
+}
+
+
+
+
+function openPendingFinalSummary(){
+  document.querySelectorAll(".dashboardView,.ledgerRelated").forEach(el=>el.classList.add("hidden"));
+  const ledger=document.getElementById("ledgerPanel");
+  if(ledger)ledger.classList.add("hidden");
+  const voucher=document.getElementById("paymentVoucherPanel");
+  if(voucher)voucher.classList.add("hidden");
+  const pending=document.getElementById("pendingPanel");
+  const summary=document.getElementById("finalSummaryPanel");
+  if(pending)pending.classList.remove("hidden");
+  if(summary)summary.classList.remove("hidden");
+  renderPendingOrders();
+  updateFinalSummaryButton();
+  window.scrollTo(0,0);
+}
+
+function closePendingFinalSummary(){
+  showDashboard();
+}
+
+function resetAllCompanyData(){
+  const RESET_PASSWORD = "674750";
+
+  const password=prompt(
+    "Reset All Company Data\n\n" +
+    "Reset password enter karein:"
+  );
+
+  if(password===null)return;
+
+  if(password !== RESET_PASSWORD){
+    alert("Password ghalat hai. ❌\nCompany data delete nahi hua.");
+    return;
+  }
+
+  const ok=confirm(
+    "WARNING!\n\n" +
+    "Company ka tamam business record delete ho jayega:\n" +
+    "Orders, Customers, Products, Ledger, Payment Vouchers aur Reports.\n\n" +
+    "Login / User accounts delete NAHI honge.\n\n" +
+    "Kya aap waqai Reset All karna chahte hain?"
+  );
+
+  if(!ok)return;
+
+  Object.keys(localStorage).forEach(key=>{
+    if(key.startsWith("orderBookerPro_")){
+      localStorage.removeItem(key);
+    }
+  });
+
+  orders=[];
+  payments=[];
+  products=[];
+  productCatalog={};
+  items=[];
+
+  alert(
+    "Reset All complete ✅\n\n" +
+    "Company ka business record zero ho gaya hai.\n" +
+    "Login accounts safe hain."
+  );
+
+  location.reload();
+}
+
+
+function backupData(){
+  try{
+    const data={backupVersion:1,app:"Habib Naveed Confectionery CSP",createdAt:new Date().toISOString(),users:getUsers(),userData:{}};
+    Object.keys(localStorage).forEach(key=>{
+      if(key.startsWith("orderBookerPro_") || key.startsWith("orderBookerUsers_")){
+        data.userData[key]=localStorage.getItem(key);
+      }
+    });
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="HNC_Backup_"+todayKey()+".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    alert("Backup file save ho gayi hai ✅");
+  }catch(e){alert("Backup nahi ban saki: "+e.message);}
+}
+
+function restoreData(event){
+  const file=event.target.files?.[0];
+  if(!file)return;
+  if(!confirm("Restore karne se is device ka HNC data replace ho jayega. Continue?")){
+    event.target.value=""; return;
+  }
+  const reader=new FileReader();
+  reader.onload=function(){
+    try{
+      const data=JSON.parse(reader.result);
+      if(!data || data.app!=="Habib Naveed Confectionery CSP" || !data.userData){
+        throw new Error("Invalid HNC backup file.");
+      }
+      Object.entries(data.userData).forEach(([key,value])=>localStorage.setItem(key,value));
+      if(data.users)localStorage.setItem(USERS_KEY,JSON.stringify(data.users));
+      alert("Restore complete ✅\nApp reload ho rahi hai.");
+      location.reload();
+    }catch(e){alert("Restore failed: "+e.message);}
+    finally{event.target.value="";}
+  };
+  reader.readAsText(file);
+}
+
+if(currentUser && getUsers()[currentUser]){
+  openApp();
+}
+
+
+let deferredInstallPrompt=null;
+
+window.addEventListener("beforeinstallprompt", e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const btn=document.getElementById("installAppBtn");
+  if(btn) btn.style.display="block";
+});
+
+async function installPWA(){
+  if(!deferredInstallPrompt){
+    alert("Browser menu (⋮) open karein aur 'Add to Home screen' ya 'Install app' select karein.");
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  try{await deferredInstallPrompt.userChoice;}catch(e){}
+  deferredInstallPrompt=null;
+  const btn=document.getElementById("installAppBtn");
+  if(btn) btn.style.display="none";
+}
+
+window.addEventListener("appinstalled",()=>{
+  const btn=document.getElementById("installAppBtn");
+  if(btn) btn.style.display="none";
+});
+
+
+function checkAppUpdate(){
+  try{
+    const v = document.querySelector('meta[name="app-version"]')?.content || "";
+    const saved = localStorage.getItem("HNC_APP_VERSION") || "";
+    if(v && saved !== v){
+      sessionStorage.removeItem("orderBookerUser");
+      localStorage.setItem("HNC_APP_VERSION", v);
+      // Fresh login: do not restore the previous user.
+      currentUser = "";
+    }
+  }catch(e){}
+}
+checkAppUpdate();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
