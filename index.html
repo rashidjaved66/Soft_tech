@@ -255,6 +255,7 @@ select{background:#fff}
     </div>
     <div class="actions">
       <button class="pdf" onclick="todaySummaryPDF()">📄 Today Summary PDF</button>
+      <button class="pdf" onclick="todayProductWiseSummaryPDF()">📊 Today Sale – Product Wise Summary</button>
       <button class="pdf" onclick="todayAllPrint()">🖨️ Today All Print</button>
       <button class="pdf" id="todayAllSavePdfBtn" type="button" onclick="todayAllSavePDF()">📥 Save Today All PDF</button>
       <button class="pdf" onclick="allOrdersPDF()">📄 My Orders PDF</button>
@@ -336,6 +337,7 @@ select{background:#fff}
   <div class="card hidden" id="paymentVoucherPanel">
     <div class="sectionHead">
       <h2 style="margin:0">💳 Payment Voucher</h2>
+      <button class="closePanel" type="button" onclick="showDashboard()">↩️ Dashboard</button>
     </div>
 
     <label>Customer</label>
@@ -1670,6 +1672,47 @@ function todayAllPrint(){
   }).join("");
 
   printPDF("Today All Orders",pages);
+}
+
+function todayProductWiseSummaryPDF(){
+  const a=getTodayOrders();
+  if(!a.length){ alert("Aaj koi order nahi hai."); return; }
+  const map={};
+  a.forEach(o=>o.items.forEach(i=>{
+    const key=String(i.product||"").trim().toLowerCase();
+    if(!key)return;
+    if(!map[key])map[key]={product:i.product||"",qty:0,sales:0};
+    map[key].qty += Number(i.qty||0);
+    map[key].sales += Number(i.total||0);
+  }));
+  const rows=Object.values(map).sort((x,y)=>String(x.product).localeCompare(String(y.product))).map(x=>`<tr>
+    <td>${esc(x.product)}</td><td>${x.qty}</td><td class="right">Rs. ${money(x.sales)}</td>
+  </tr>`).join("");
+  const totalQty=Object.values(map).reduce((s,x)=>s+x.qty,0);
+  const totalSales=Object.values(map).reduce((s,x)=>s+x.sales,0);
+  const body=`<div class="receipt">
+    <div class="receiptHeader">
+      <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
+      <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+      <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
+      <div class="invoiceTitle">TODAY SALE — PRODUCT WISE</div>
+    </div>
+    <div class="invoiceInfo">
+      <div><b>Date:</b> ${todayKey()}</div>
+      <div><b>User:</b> ${esc(currentUser)}</div>
+      <div><b>Total Orders:</b> ${a.length}</div>
+    </div>
+    <table class="receiptTable">
+      <tr><th class="desc">Product</th><th>Qty</th><th>Sale</th></tr>
+      ${rows}
+    </table>
+    <div class="receiptTotals">
+      <div><span>Total Qty</span><b>${totalQty}</b></div>
+      <div class="grandReceipt"><span>Grand Total Sale</span><b>Rs. ${money(totalSales)}</b></div>
+    </div>
+    <div class="receiptFooter"><div>Today Sale Product Wise Summary</div><div>Design by Rashid Javed • 0314-6775046</div></div>
+  </div>`;
+  printPDF("Today Sale Product Wise Summary",body);
 }
 
 function todaySummaryPDF(){
