@@ -1015,7 +1015,7 @@ function saveOrder(){
     "Order Number: " + order.orderNo + "\n" +
     "Order Amount: Rs. " + money(grand) + "\n" +
     "Date: " + order.date + "\n\n" +
-    "Habib Naveed Confectionery CSP"
+    "Habib Naveed Confectionery Traders"
   );
   const waUrl = "https://wa.me/" + waNumber + "?text=" + waText;
 
@@ -1182,7 +1182,7 @@ function customerLedgerPDF(){
     return `<div class="ledgerReceipt ${index<customers.length-1?'pageBreak':''}">
       <div class="receiptHeader">
         <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
-        <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+        <div class="receiptSub">JDW Road Chowk Shahbaz Pur</div>
         <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
         <div class="invoiceTitle">CUSTOMER LEDGER</div>
       </div>
@@ -1209,7 +1209,7 @@ function customerLedgerPDF(){
 
       <div class="receiptFooter">
         <div>Customer Wise Ledger</div>
-        <div>Design by Rashid Javed • 0314-6775046</div>
+        <div>Software Design by Rashid Javed • 0314-6775046</div>
       </div>
     </div>`;
   }).join("");
@@ -1446,7 +1446,7 @@ function finalSummaryPDF(){
   </table>
   <div class="total">Final Total Sales: Rs. ${money(sales)}</div>
   <div class="meta" style="text-align:center;margin-top:24px">All orders completed successfully.</div>
-  <div class="meta" style="text-align:center;margin-top:10px">Design by Rashid Javed • 0314-6775046</div>`;
+  <div class="meta" style="text-align:center;margin-top:10px">Software Design by Rashid Javed • 0314-6775046</div>`;
 
   printPDF("Final Summary",body);
 }
@@ -1534,7 +1534,7 @@ function singleOrderPDF(id){
   const body=`<div class="receipt">
     <div class="receiptHeader">
       <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
-      <div class="receiptSub">JDW Road Chowk Shahbaz Pur </div>
+      <div class="receiptSub">JDW Road Chowk Shahbaz Pur</div>
       <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
       <div class="invoiceTitle">SALE INVOICE</div>
     </div>
@@ -1564,7 +1564,7 @@ function singleOrderPDF(id){
 
     <div class="receiptFooter">
       <div>Thank you for your business</div>
-      <div>Design by Rashid Javed • 0314-6775046</div>
+      <div>Software Design by Rashid Javed • 0314-6775046</div>
     </div>
   </div>`;
 
@@ -1592,7 +1592,7 @@ function todayAllSavePDF(){
     return `<div class="receipt ${index<today.length-1?'pageBreak':''}">
       <div class="receiptHeader">
         <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
-        <div class="receiptSub">JDW Road Chowk Shahbaz Pur </div>
+        <div class="receiptSub">JDW Road Chowk Shahbaz Pur</div>
         <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
         <div class="invoiceTitle">SALE INVOICE</div>
       </div>
@@ -1611,7 +1611,7 @@ function todayAllSavePDF(){
       </div>
       <div class="receiptFooter">
         <div>Thank you for your business</div>
-        <div>Design by Rashid Javed • 0314-6775046</div>
+        <div>Software Design by Rashid Javed • 0314-6775046</div>
       </div>
     </div>`;
   }).join("");
@@ -1638,7 +1638,7 @@ function todayAllPrint(){
     return `<div class="receipt ${index<a.length-1?'pageBreak':''}">
       <div class="receiptHeader">
         <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
-        <div class="receiptSub">Habib Naveed Confectionery CSP</div>
+        <div class="receiptSub">JDW Road Chowk Shahbaz Pur</div>
         <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
         <div class="invoiceTitle">SALE INVOICE</div>
       </div>
@@ -1666,7 +1666,7 @@ function todayAllPrint(){
 
       <div class="receiptFooter">
         <div>Thank you for your business</div>
-        <div>Design by Rashid Javed • 0314-6775046</div>
+        <div>Software Design by Rashid Javed • 0314-6775046</div>
       </div>
     </div>`;
   }).join("");
@@ -1693,7 +1693,7 @@ function todayProductWiseSummaryPDF(){
   const body=`<div class="receipt">
     <div class="receiptHeader">
       <div class="receiptTitle">Habib Naveed Confectionery Traders</div>
-      <div class="receiptSub">JDW Road Chowk Shahbaz Pur </div>
+      <div class="receiptSub">JDW Road Chowk Shahbaz Pur</div>
       <div class="receiptPhones">0303-9797145 &nbsp;•&nbsp; 0309-3609377</div>
       <div class="invoiceTitle">TODAY SALE — PRODUCT WISE</div>
     </div>
