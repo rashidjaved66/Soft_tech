@@ -1490,21 +1490,25 @@ function printPDF(title,body){
   .receiptTable{width:3.0in;max-width:3.0in;margin-top:4px;table-layout:fixed}
   .receiptTable th,.receiptTable td{border:1px solid #777;padding:4px 3px;font-size:11px}
   .receiptTable th{font-weight:bold}
-  .receiptTable .desc{width:53%;word-break:break-word}
+  .receiptTable .desc{
+    width:53%;
+    word-break:break-word;
+    font-weight:bold;
+}
 
 .receiptTable th:nth-child(2),
 .receiptTable td:nth-child(2){
-    width:10%;
+    width:8%;
 }
 
 .receiptTable th:nth-child(3),
 .receiptTable td:nth-child(3){
-    width:12%;
+    width:10%;
 }
 
 .receiptTable th:nth-child(4),
 .receiptTable td:nth-child(4){
-    width:27%;
+    width:29%;
 }
   
   .receiptTotals{margin-top:7px;border-top:1px solid #111;padding-top:5px;font-size:10px}
