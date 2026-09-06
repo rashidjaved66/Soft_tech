@@ -452,7 +452,7 @@ function todayKey(){
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
 function money(n){
-  return Number(n||0).toLocaleString("en-PK",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return Number(n||0).toLocaleString("en-PK",{minimumFractionDigits:0,maximumFractionDigits:0});
 }
 function esc(s){
   return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
