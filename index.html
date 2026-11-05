@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Habib Naveed CSP">
-<meta name="app-version" content="2026.08.29.1">
+<meta name="app-version" content="2026.11.06.1">
 <script>
 /*
   APP UPDATE / FRESH LOGIN
@@ -20,7 +20,7 @@
   purani login/session + purana app data clear ho jayega.
   Is se updated app fresh login screen se start hogi.
 */
-const APP_VERSION = "2026.08.29.1";
+const APP_VERSION = "2026.11.06.1";
 (function(){
   try{
     const oldVersion = localStorage.getItem("HNC_APP_VERSION");
@@ -409,43 +409,66 @@ select{background:#fff}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-const DEFAULT_USERS = {
-  admin:{password:"1234",name:"Admin"},
-  booker1:{password:"1234",name:"Booker 1"},
-  booker2:{password:"1234",name:"Booker 2"},
-  booker3:{password:"1234",name:"Booker 3"}
-};
-
-const USERS_KEY = "orderBookerUsers_v3";
-function loadUsers(){
-  try{return JSON.parse(localStorage.getItem(USERS_KEY)||"null") || {...DEFAULT_USERS};}
-  catch(e){return {...DEFAULT_USERS};}
-}
-function saveUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-function getUsers(){ return loadUsers(); }
-
-let currentUser = sessionStorage.getItem("orderBookerUser") || "";
+const SB_URL="https://rbalivldbinehisoghye.supabase.co";
+const SB_KEY="sb_publishable_zB9QXQmCp519eUy-yCLebw_xT9CcnMX";
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const uMail=u=>u+"@hnc-booker.com";
+let currentUser="", currentUid="", currentName="";
 let items=[];
 let orders=[];
 let payments=[];
 let products=[];
 let productCatalog={};
+let saving=Promise.resolve();
 
-function userKey(){ return "orderBookerPro_"+currentUser; }
-
-function loadUserData(){
-  orders=JSON.parse(localStorage.getItem(userKey())||"[]");
-  payments=JSON.parse(localStorage.getItem(userKey()+"_payments")||"[]");
-  try{productCatalog=JSON.parse(localStorage.getItem(userKey()+"_products")||"{}")||{};}
-  catch(e){productCatalog={};}
+function setSync(t){
+  let e=document.getElementById("syncStatus");
+  if(!e){e=document.createElement("span");e.id="syncStatus";e.style.cssText="font-size:12px;margin-left:8px";const l=document.getElementById("loggedUser");if(l)l.after(e)}
+  e.textContent=t;
+}
+function cacheKey(){return "hncCache_"+currentUid}
+function dirtyKey(){return "hncDirty_"+currentUid}
+function applyData(m){
+  orders=Array.isArray(m.orders)?m.orders:[];
+  payments=Array.isArray(m.payments)?m.payments:[];
+  productCatalog=(m.productCatalog&&typeof m.productCatalog==="object"&&!Array.isArray(m.productCatalog))?m.productCatalog:{};
+}
+function oldLocal(){
+  const k="orderBookerPro_"+currentUser;
+  const g=s=>{try{return JSON.parse(localStorage.getItem(s)||"null")}catch(e){return null}};
+  const o=g(k),p=g(k+"_payments"),c=g(k+"_products");
+  return (o||p||c)?{orders:o,payments:p,productCatalog:c}:null;
+}
+async function pushData(){
+  if(!currentUid)return;
+  const rows=[["orders",orders],["payments",payments],["products",productCatalog]].map(r=>({user_id:currentUid,key:r[0],value:r[1]}));
+  const {error}=await sb.from("app_data").upsert(rows,{onConflict:"user_id,key"});
+  if(error){console.error(error);setSync("⚠️ Sync pending");}
+  else{try{localStorage.removeItem(dirtyKey())}catch(e){}setSync("☁️ Saved");}
 }
 function saveUserData(){
-  localStorage.setItem(userKey(),JSON.stringify(orders));
-  localStorage.setItem(userKey()+"_payments",JSON.stringify(payments));
-  localStorage.setItem(userKey()+"_products",JSON.stringify(productCatalog));
+  try{localStorage.setItem(cacheKey(),JSON.stringify({orders,payments,productCatalog}));localStorage.setItem(dirtyKey(),"1")}catch(e){}
+  saving=saving.then(pushData).catch(()=>{});
+}
+async function loadUserData(){
+  let local=null;
+  try{local=JSON.parse(localStorage.getItem(cacheKey())||"null")}catch(e){}
+  if(local&&localStorage.getItem(dirtyKey())==="1"){
+    applyData(local);saving=saving.then(pushData).catch(()=>{});return;
+  }
+  const {data,error}=await sb.from("app_data").select("key,value");
+  if(error){applyData(local||{});setSync("📴 Offline");return}
+  if(!data.length){
+    const old=oldLocal();
+    if(old){applyData(old);saveUserData();return}
+  }
+  const m={};
+  data.forEach(r=>{m[r.key==="products"?"productCatalog":r.key]=r.value});
+  applyData(m);
+  try{localStorage.setItem(cacheKey(),JSON.stringify({orders,payments,productCatalog}))}catch(e){}
+  setSync("☁️ Synced");
 }
 function todayKey(){
   const d=new Date();
@@ -469,7 +492,14 @@ function showAuth(mode){
     st.classList.remove("active"); lt.classList.add("active");
   }
 }
-function signup(){
+async function startSession(user){
+  const md=user.user_metadata||{};
+  currentUid=user.id;
+  currentUser=md.username||(user.email||"").split("@")[0];
+  currentName=md.name||currentUser;
+  await openApp();
+}
+async function signup(){
   const name=document.getElementById("signupName").value.trim();
   const u=document.getElementById("signupUser").value.trim().toLowerCase();
   const p=document.getElementById("signupPass").value;
@@ -477,46 +507,40 @@ function signup(){
   const msg=document.getElementById("signupMsg");
   if(!name || !u || !p){msg.style.color="#c00";msg.textContent="All fields are required.";return}
   if(!/^[a-z0-9._-]{3,30}$/.test(u)){msg.style.color="#c00";msg.textContent="Username: 3-30 chars, letters/numbers . _ - only.";return}
-  if(p.length<4){msg.style.color="#c00";msg.textContent="Password must be at least 4 characters.";return}
+  if(p.length<6){msg.style.color="#c00";msg.textContent="Password must be at least 6 characters.";return}
   if(p!==p2){msg.style.color="#c00";msg.textContent="Passwords do not match.";return}
-  const users=getUsers();
-  if(users[u]){msg.style.color="#c00";msg.textContent="Username already exists.";return}
-  users[u]={password:p,name:name};
-  saveUsers(users);
-  msg.style.color="#14833b";
-  msg.textContent="Account created successfully. You can now login.";
-  document.getElementById("loginUser").value=u;
-  document.getElementById("loginPass").value="";
-  setTimeout(()=>showAuth("login"),700);
+  msg.style.color="#555";msg.textContent="Please wait...";
+  const {data,error}=await sb.auth.signUp({email:uMail(u),password:p,options:{data:{name:name,username:u}}});
+  if(error){msg.style.color="#c00";msg.textContent=/registered|exists/i.test(error.message)?"Username already exists.":error.message;return}
+  if(data.session){msg.textContent="";await startSession(data.user);return}
+  msg.style.color="#c00";
+  msg.textContent="Account bana, lekin Supabase mein Confirm email band karna zaroori hai.";
 }
 
-function login(){
+async function login(){
   const u=document.getElementById("loginUser").value.trim().toLowerCase();
   const p=document.getElementById("loginPass").value;
-  const users=getUsers();
-  if(users[u] && users[u].password===p){
-    currentUser=u;
-    sessionStorage.setItem("orderBookerUser",u);
-    document.getElementById("loginMsg").textContent="";
-    openApp();
-  }else{
-    document.getElementById("loginMsg").textContent="Invalid username or password.";
-  }
+  const msg=document.getElementById("loginMsg");
+  msg.style.color="#555";msg.textContent="Please wait...";
+  const {data,error}=await sb.auth.signInWithPassword({email:uMail(u),password:p});
+  if(error){msg.style.color="#c00";msg.textContent=/confirm/i.test(error.message)?"Supabase mein Confirm email band karein.":"Invalid username or password.";return}
+  msg.textContent="";
+  await startSession(data.user);
 }
-function logout(){
-  sessionStorage.removeItem("orderBookerUser");
-  currentUser="";
+async function logout(){
+  try{await sb.auth.signOut()}catch(e){}
+  currentUser="";currentUid="";currentName="";
   document.getElementById("app").classList.add("hidden");
   document.getElementById("loginScreen").classList.remove("hidden");
   document.getElementById("loginUser").value="";
   document.getElementById("loginPass").value="";
 }
-function openApp(){
+async function openApp(){
   document.getElementById("loginScreen").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
   window.scrollTo(0,0);
-  document.getElementById("loggedUser").textContent=getUsers()[currentUser].name+" ("+currentUser+")";
-  loadUserData();
+  document.getElementById("loggedUser").textContent=currentName+" ("+currentUser+")";
+  await loadUserData();
   items=[];
   renderItems();
   renderOrders();
@@ -1815,7 +1839,7 @@ function resetAllCompanyData(){
   if(!ok)return;
 
   Object.keys(localStorage).forEach(key=>{
-    if(key.startsWith("orderBookerPro_")){
+    if(key.startsWith("orderBookerPro_")||key.startsWith("hncCache_")){
       localStorage.removeItem(key);
     }
   });
@@ -1832,23 +1856,19 @@ function resetAllCompanyData(){
     "Login accounts safe hain."
   );
 
-  location.reload();
+  saveUserData();
+  saving.then(()=>location.reload());
 }
 
 
 function backupData(){
   try{
-    const data={backupVersion:1,app:"Habib Naveed Confectionery CSP",createdAt:new Date().toISOString(),users:getUsers(),userData:{}};
-    Object.keys(localStorage).forEach(key=>{
-      if(key.startsWith("orderBookerPro_") || key.startsWith("orderBookerUsers_")){
-        data.userData[key]=localStorage.getItem(key);
-      }
-    });
+    const data={backupVersion:2,app:"Habib Naveed Confectionery CSP",createdAt:new Date().toISOString(),user:currentUser,orders,payments,productCatalog};
     const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
     a.href=url;
-    a.download="HNC_Backup_"+todayKey()+".json";
+    a.download="HNC_Backup_"+currentUser+"_"+todayKey()+".json";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -1860,29 +1880,38 @@ function backupData(){
 function restoreData(event){
   const file=event.target.files?.[0];
   if(!file)return;
-  if(!confirm("Restore karne se is device ka HNC data replace ho jayega. Continue?")){
+  if(!confirm("Restore karne se is account ka data replace ho jayega. Continue?")){
     event.target.value=""; return;
   }
   const reader=new FileReader();
   reader.onload=function(){
     try{
       const data=JSON.parse(reader.result);
-      if(!data || data.app!=="Habib Naveed Confectionery CSP" || !data.userData){
-        throw new Error("Invalid HNC backup file.");
-      }
-      Object.entries(data.userData).forEach(([key,value])=>localStorage.setItem(key,value));
-      if(data.users)localStorage.setItem(USERS_KEY,JSON.stringify(data.users));
+      if(!data || data.app!=="Habib Naveed Confectionery CSP")throw new Error("Invalid HNC backup file.");
+      let src=null;
+      if(data.orders||data.payments||data.productCatalog){src=data}
+      else if(data.userData){
+        const g=k=>{try{return JSON.parse(data.userData[k]||"null")}catch(e){return null}};
+        const b="orderBookerPro_"+currentUser;
+        src={orders:g(b),payments:g(b+"_payments"),productCatalog:g(b+"_products")};
+        if(!src.orders&&!src.payments&&!src.productCatalog)throw new Error("Is backup mein '"+currentUser+"' ka data nahi mila.");
+      }else throw new Error("Invalid HNC backup file.");
+      applyData(src);
+      saveUserData();
       alert("Restore complete ✅\nApp reload ho rahi hai.");
-      location.reload();
+      saving.then(()=>location.reload());
     }catch(e){alert("Restore failed: "+e.message);}
     finally{event.target.value="";}
   };
   reader.readAsText(file);
 }
 
-if(currentUser && getUsers()[currentUser]){
-  openApp();
-}
+(async()=>{
+  try{
+    const {data}=await sb.auth.getSession();
+    if(data&&data.session)await startSession(data.session.user);
+  }catch(e){}
+})();
 
 
 let deferredInstallPrompt=null;
