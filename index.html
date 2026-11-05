@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Habib Naveed CSP">
-<meta name="app-version" content="2026.11.06.1">
+<meta name="app-version" content="2026.11.06.2">
 <script>
 /*
   APP UPDATE / FRESH LOGIN
@@ -20,7 +20,7 @@
   purani login/session + purana app data clear ho jayega.
   Is se updated app fresh login screen se start hogi.
 */
-const APP_VERSION = "2026.11.06.1";
+const APP_VERSION = "2026.11.06.2";
 (function(){
   try{
     const oldVersion = localStorage.getItem("HNC_APP_VERSION");
@@ -175,10 +175,129 @@ select{background:#fff}
 </style>
 <button id="installAppBtn" onclick="installPWA()">📲 Install App</button>
 
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("HNC_THEME")||"candy")}catch(e){}</script>
+<style id="hncThemeLayer">
+:root{--p:#ff2d87;--p2:#ff8a00;--c1:#ff2d87;--c2:#7c3aed;--c3:#00b8a9;--c4:#ffb300;--bg:linear-gradient(160deg,#ffe3f1,#fff1d6 45%,#e6ddff);--soft:#fff0f7;--soft2:#ffe1ef;--card:#fff;--text:#2b1d33;--muted:#7a6a85;--line:#f3d3e3;--lbg:linear-gradient(145deg,#ff2d87,#ff8a00 55%,#7c3aed)}
+html[data-theme=ocean]{--p:#0077ff;--p2:#00c2c7;--c1:#0077ff;--c2:#00b8a9;--c3:#6c5ce7;--c4:#ff7a45;--bg:linear-gradient(160deg,#dff3ff,#e0fff9 55%,#e8e6ff);--soft:#eef7ff;--soft2:#d9ecff;--text:#12263a;--muted:#5d7388;--line:#cfe3f5;--lbg:linear-gradient(145deg,#0077ff,#00c2c7 60%,#6c5ce7)}
+html[data-theme=mint]{--p:#12b76a;--p2:#84cc16;--c1:#12b76a;--c2:#0ea5e9;--c3:#f59e0b;--c4:#ec4899;--bg:linear-gradient(160deg,#dcfce7,#fefce8 55%,#e0f2fe);--soft:#effdf4;--soft2:#d5f6e2;--text:#16301f;--muted:#5f7a68;--line:#cdeedb;--lbg:linear-gradient(145deg,#12b76a,#84cc16 55%,#0ea5e9)}
+html[data-theme=sunset]{--p:#ff5a1f;--p2:#ffb703;--c1:#ff5a1f;--c2:#e11d48;--c3:#f59e0b;--c4:#7c3aed;--bg:linear-gradient(160deg,#ffe8d6,#fff4cc 50%,#ffdede);--soft:#fff2ea;--soft2:#ffe0cf;--text:#3a1d12;--muted:#8a6552;--line:#f6d5c2;--lbg:linear-gradient(145deg,#e11d48,#ff5a1f 50%,#ffb703)}
+html[data-theme=grape]{--p:#7c3aed;--p2:#ec4899;--c1:#7c3aed;--c2:#ec4899;--c3:#06b6d4;--c4:#f59e0b;--bg:linear-gradient(160deg,#ece4ff,#ffe4f3 55%,#dff6ff);--soft:#f5f0ff;--soft2:#e8ddff;--text:#26173f;--muted:#76658f;--line:#dccff5;--lbg:linear-gradient(145deg,#4f46e5,#7c3aed 45%,#ec4899)}
+html[data-theme=night]{--p:#22d3ee;--p2:#a78bfa;--c1:#22d3ee;--c2:#a78bfa;--c3:#f472b6;--c4:#fbbf24;--bg:linear-gradient(160deg,#0b0e22,#161a3a);--soft:#232850;--soft2:#2b3160;--card:#1b1f3b;--text:#f1f2ff;--muted:#a6a9c8;--line:#2e335c;--lbg:linear-gradient(145deg,#0b0e22,#312e81 60%,#7c3aed)}
+body{background:var(--bg);background-attachment:fixed;color:var(--text)}
+h1,h2,.name,.ledgerName,.loginCard h1{font-family:Fredoka,Calibri,"Segoe UI",sans-serif}
+.card h2{color:var(--p)}
+.muted,.productHint,.pendingMeta,.summaryListMeta,.loginCard p,.empty,.pwaHint{color:var(--muted)}
+/* surfaces */
+.card,.userbar,.order,.todayOrderDetail,.summaryListRow,.summaryDetailCard,.ledgerCustomer,.todayDetails,.todayDetailsHead,.summaryListOverlay,.summaryListTop,.statBtn,.loginCard,.pendingOrder{background:var(--card);color:var(--text);border-color:var(--line)}
+.customerBox,.productEntry,.ledgerStat,.item,.collapseBtn,.quickBox,.summaryHeader,.summaryBack,.pdf{background:var(--soft);color:var(--text);border-color:var(--line)}
+.row,.todayItem,.summaryDetailLine,.ledgerTable th,.ledgerTable td,.todayDetails,.todayDetailsHead,.summaryListTop{border-color:var(--line)}
+input,select{background:var(--card);color:var(--text);border:2px solid var(--line);transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px var(--soft2)}
+.card{border-top:6px solid var(--p);box-shadow:0 6px 18px -8px var(--p)}
+.card:nth-child(4n+2){border-top-color:var(--c2)}.card:nth-child(4n+3){border-top-color:var(--c3)}.card:nth-child(4n+4){border-top-color:var(--c4)}
+/* header */
+.header{background:linear-gradient(120deg,var(--p),var(--p2));position:relative;overflow:hidden;box-shadow:0 10px 24px -10px var(--p)}
+.header::after{content:"🍬 🍩 🧁";position:absolute;right:12px;top:8px;font-size:22px;opacity:.55;letter-spacing:4px}
+.userbar{border-left:6px solid var(--c2)}
+/* colourful stat tiles */
+.stat{color:#fff;border:0}.stat b{color:#fff}.stat .muted{color:#ffffffdd}
+.summary>*:nth-child(4n+1){background:linear-gradient(135deg,var(--c1),var(--c2))}
+.summary>*:nth-child(4n+2){background:linear-gradient(135deg,var(--c2),var(--c3))}
+.summary>*:nth-child(4n+3){background:linear-gradient(135deg,var(--c3),var(--c4))}
+.summary>*:nth-child(4n+4){background:linear-gradient(135deg,var(--c4),var(--c1))}
+.ledgerStat b,.grand,.todayGrand{color:var(--p)}
+/* buttons */
+.save,.loginBtn,#installAppBtn{background:linear-gradient(120deg,var(--p),var(--p2));color:#fff;box-shadow:0 8px 18px -8px var(--p)}
+.save:disabled{background:var(--line);color:var(--muted);box-shadow:none}
+.add,.smallBtn,.addItemBtn{background:var(--soft2);color:var(--p);border:2px solid var(--p)}
+.savedBadge{background:var(--soft2);color:var(--p)}
+.completeBtn{background:linear-gradient(120deg,#14833b,#65c466)}
+button:active{transform:scale(.97)}
+/* login: bakery awning */
+#loginScreen{background:var(--lbg);position:relative;overflow:hidden}
+.sweets span{position:absolute;font-size:34px;animation:hncFloat 6s ease-in-out infinite alternate;pointer-events:none}
+@keyframes hncFloat{to{transform:translateY(-18px) rotate(12deg)}}
+.loginCard{position:relative;z-index:1;padding-top:0;box-shadow:0 24px 50px -14px #0006}
+.awning{height:46px;margin:0 -24px 0;border-radius:18px 18px 0 0;background:repeating-linear-gradient(90deg,var(--p) 0 28px,#fff 28px 56px);position:relative}
+.awning::after{content:"";position:absolute;left:0;right:0;top:100%;height:14px;background:repeating-linear-gradient(90deg,var(--p) 0 28px,#fff 28px 56px);-webkit-mask:radial-gradient(circle at 14px 0,#000 13.5px,transparent 14px) 0 0/28px 14px repeat-x;mask:radial-gradient(circle at 14px 0,#000 13.5px,transparent 14px) 0 0/28px 14px repeat-x}
+.loginLogo{width:80px;height:80px;margin:-6px auto 8px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:42px;border:4px solid var(--p2);box-shadow:0 8px 20px -6px var(--p);position:relative;z-index:2}
+.loginCard h1{background:linear-gradient(120deg,var(--p),var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.authTabs{background:var(--soft2);padding:5px;border-radius:999px}
+.authTab{background:transparent;color:var(--muted);border-radius:999px}
+.authTab.active{background:linear-gradient(120deg,var(--p),var(--p2));color:#fff;box-shadow:0 6px 14px -6px var(--p)}
+/* theme picker */
+#themeBox{position:fixed;left:12px;bottom:12px;z-index:10003}
+#themeFab{width:48px;height:48px;border-radius:50%;font-size:22px;background:#fff;box-shadow:0 6px 16px #0004;padding:0}
+#themeList{position:absolute;bottom:58px;left:0;background:#fff;border-radius:16px;padding:8px;box-shadow:0 10px 30px #0005;display:grid;gap:4px;min-width:150px}
+#themeList button{display:flex;align-items:center;gap:10px;background:#f4f4f8;color:#222;text-align:left}
+#themeList i{width:22px;height:22px;border-radius:50%;flex:none;border:2px solid #fff;box-shadow:0 0 0 1px #0003}
+@media(prefers-reduced-motion:reduce){.sweets span{animation:none}}
+</style>
+<style>
+.ssOverlay{position:fixed;inset:0;z-index:10000;background:var(--bg);background-attachment:fixed;overflow-y:auto;padding:14px}
+.ssWrap{max-width:700px;margin:auto}
+.ssRow{display:grid;grid-template-columns:1.6fr .8fr .8fr .8fr;gap:6px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.ssRow.h{font-weight:bold;color:var(--muted);font-size:12px}
+.ssRow span:not(:first-child){text-align:right}
+.s-low{color:#d00;font-weight:bold}.s-warn{color:#d97706;font-weight:bold}.s-ok{color:#14833b;font-weight:bold}
+.smBox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+</style>
+
+<style id="hncExtra">
+html[data-theme=cocoa]{--p:#8d4b2f;--p2:#e0a15c;--c1:#8d4b2f;--c2:#c2410c;--c3:#d97706;--c4:#65a30d;--bg:linear-gradient(160deg,#f5e6d8,#fff3e0 55%,#f3e0d0);--soft:#fbf0e6;--soft2:#f1dcc8;--text:#3b2316;--muted:#8a6b58;--line:#e8cfb9;--lbg:linear-gradient(145deg,#5b3020,#8d4b2f 55%,#e0a15c)}
+html[data-theme=royal]{--p:#1e3a8a;--p2:#d4a017;--c1:#1e3a8a;--c2:#7c3aed;--c3:#d4a017;--c4:#0ea5e9;--bg:linear-gradient(160deg,#e3e9ff,#fff7da 55%,#e6e0ff);--soft:#eef2ff;--soft2:#dbe3ff;--text:#14213d;--muted:#5b6b8c;--line:#cdd7f3;--lbg:linear-gradient(145deg,#0f1f55,#1e3a8a 55%,#d4a017)}
+.smBox>*:nth-child(4n+1){background:linear-gradient(135deg,var(--c1),var(--c2))}
+.smBox>*:nth-child(4n+2){background:linear-gradient(135deg,var(--c2),var(--c3))}
+.smBox>*:nth-child(4n+3){background:linear-gradient(135deg,var(--c3),var(--c4))}
+.smBox>*:nth-child(4n+4){background:linear-gradient(135deg,var(--c4),var(--c1))}
+#langFab{position:fixed;left:68px;bottom:12px;z-index:10003;height:48px;min-width:48px;border-radius:999px;padding:0 14px;font-size:15px;background:#fff;color:#222;box-shadow:0 6px 16px #0004}
+.lowBanner{border-top-color:#d00!important;background:#fff5f5;cursor:pointer}
+html[data-theme=night] .lowBanner{background:#3a1f2b}
+.lowBanner h2{color:#d00!important;margin-bottom:8px}
+.lowRow{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lowRow:last-child{border-bottom:0}
+.lowThreshold{display:flex;align-items:center;gap:8px;margin-top:10px}
+.lowThreshold input{width:90px;min-height:40px}
+.stockDot{display:inline-block;background:#d00;color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-inline-start:6px}
+html[lang=ur] body,html[lang=ur] button,html[lang=ur] input,html[lang=ur] select{font-family:"Noto Nastaliq Urdu","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif}
+html[lang=ur] body{line-height:1.9}
+html[lang=ur] h1,html[lang=ur] h2,html[lang=ur] .name,html[lang=ur] .ledgerName,html[lang=ur] .loginCard h1{font-family:"Noto Nastaliq Urdu","Noto Naskh Arabic",Tahoma,sans-serif;line-height:1.8}
+html[lang=ur] .grand,html[lang=ur] .todayGrand{text-align:left}
+html[lang=ur] .header::after{right:auto;left:12px}
+html[lang=ur] .ssRow span:not(:first-child){text-align:left}
+html[lang=ur] .ledgerTable th,html[lang=ur] .ledgerTable td{text-align:right}
+html[lang=ur] .ledgerTable th:last-child,html[lang=ur] .ledgerTable td:last-child{text-align:left}
+html[lang=ur] input[type=number],html[lang=ur] input[type=tel],html[lang=ur] input[type=month]{direction:ltr;text-align:right}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div id="stockOverlay" class="ssOverlay hidden"><div class="ssWrap">
+ <div class="sectionHead"><h2 style="margin:0">📦 Stock &amp; Sales</h2><button class="closePanel" onclick="closeStockSales()">✖ Close</button></div>
+ <div class="authTabs"><button id="sst_stock" class="authTab active" onclick="showSSTab('stock')">Stock</button><button id="sst_month" class="authTab" onclick="showSSTab('month')">Monthly Sales</button></div>
+ <div id="ss_stock">
+  <div class="card"><h2>➕ Add Stock</h2>
+   <label>Product</label><select id="stProduct"></select>
+   <label>Quantity (galti theek karne ke liye minus bhi likh sakte hain, jaise -5)</label><input id="stQty" type="number" inputmode="decimal" placeholder="Qty">
+   <button class="save" style="position:static" onclick="addStock()">Save Stock</button></div>
+  <div class="card"><h2>📋 Current Stock</h2>
+   <div class="lowThreshold"><label style="margin:0">Low stock alert level</label><input id="lowLevel" type="number" min="0" inputmode="numeric" onchange="setLowLevel(this.value)"></div>
+   <div id="stList" style="margin-top:8px"></div>
+   <div class="muted" style="margin-top:8px">Left = Received − Sold. Sale sirf stock add karne ke baad ke orders se ghatti hai.</div></div>
+ </div>
+ <div id="ss_month" class="hidden">
+  <div class="card"><h2>📅 Monthly Sales</h2><label>Month</label><input id="smMonth" type="month" onchange="renderMonthly()">
+   <div id="smOut"></div><button class="pdf" style="margin-top:10px" onclick="monthlyPDF()">📄 Monthly Report PDF</button></div>
+ </div>
+</div></div>
+<div id="themeBox"><div id="themeList" class="hidden"><button onclick="setTheme('candy')"><i style="background:linear-gradient(135deg,#ff2d87,#ff8a00)"></i>Candy Pop</button><button onclick="setTheme('ocean')"><i style="background:linear-gradient(135deg,#0077ff,#00c2c7)"></i>Ocean</button><button onclick="setTheme('mint')"><i style="background:linear-gradient(135deg,#12b76a,#84cc16)"></i>Mint Fresh</button><button onclick="setTheme('sunset')"><i style="background:linear-gradient(135deg,#ff5a1f,#ffb703)"></i>Sunset</button><button onclick="setTheme('grape')"><i style="background:linear-gradient(135deg,#7c3aed,#ec4899)"></i>Grape</button><button onclick="setTheme('night')"><i style="background:linear-gradient(135deg,#0b0e22,#22d3ee)"></i>Night</button><button onclick="setTheme('cocoa')"><i style="background:linear-gradient(135deg,#8d4b2f,#e0a15c)"></i>Chocolate</button><button onclick="setTheme('royal')"><i style="background:linear-gradient(135deg,#1e3a8a,#d4a017)"></i>Royal</button></div><button id="themeFab" onclick="toggleThemes()" aria-label="Change theme">🎨</button></div>
+<button id="langFab" onclick="toggleLang()" aria-label="Language">اردو</button>
 <div id="loginScreen" class="loginWrap">
+  <div class="sweets" aria-hidden="true"><span style="left:6%;top:8%;animation-delay:0s">🍬</span><span style="left:82%;top:12%;animation-delay:1s">🍭</span><span style="left:10%;top:78%;animation-delay:2s">🍩</span><span style="left:84%;top:74%;animation-delay:0.5s">🧁</span><span style="left:46%;top:4%;animation-delay:1.5s">🍪</span><span style="left:3%;top:44%;animation-delay:2.5s">🍫</span><span style="left:90%;top:44%;animation-delay:3s">🎂</span><span style="left:50%;top:90%;animation-delay:0.8s">🍰</span></div>
   <div class="loginCard">
+    <div class="awning"></div>
     <div class="loginLogo">🍰</div>
     <h1>Habib Naveed Confectionery CSP</h1>
     <p>Order Booker • Login / Signup</p>
@@ -238,10 +357,16 @@ select{background:#fff}
     <div class="muted" style="margin-top:8px">Purane mobile se Backup bana kar naye mobile mein Restore karein.</div>
   </div>
 
+  <div class="card dashboardView lowBanner hidden" id="lowStockBanner" onclick="openStockSales()">
+    <h2>⚠️ Low Stock Alert</h2>
+    <div id="lowStockList"></div>
+  </div>
+
   <div class="card dashboardView" id="newOrderLauncher">
     <button class="save" onclick="openNewOrder()">➕ New Order</button>
       <button class="save" type="button" onclick="openPaymentVoucher()">💳 New Payment Voucher</button>
       <button class="pdf" type="button" onclick="openCustomerLedger()">👤 Customer Ledger</button>
+      <button class="pdf" type="button" onclick="openStockSales()">📦 Stock &amp; Monthly Sales</button>
       <button class="pdf" type="button" onclick="openPendingFinalSummary()">⏳ Pending Orders / Final Summary</button>
   </div>
 
@@ -935,7 +1060,7 @@ function addProductFromBox(){
   // Product ko customer ki tarah permanently save karo, taake
   // next order mein Product search bar mein show ho.
   const productKey=product.toLowerCase();
-  productCatalog[productKey]={name:product,rate};
+  productCatalog[productKey]={...(productCatalog[productKey]||{}),name:product,rate};
   saveUserData();
 
   items.push({
@@ -1011,7 +1136,7 @@ function saveOrder(){
   // Har order ke products ko catalog mein save/update karo.
   clean.forEach(x=>{
     const key=x.product.toLowerCase();
-    productCatalog[key]={name:x.product,rate:Number(x.rate)||0};
+    productCatalog[key]={...(productCatalog[key]||{}),name:x.product,rate:Number(x.rate)||0};
   });
 
   const order={
@@ -1062,7 +1187,8 @@ function saveOrder(){
   updateNewProductTotal();
   updateFinalSummaryButton();
 
-  alert("Order saved successfully ✅\n\nAmount: Rs. "+money(grand)+"\nOrder No: "+order.orderNo+"\n\nWhatsApp message tayyar hai.");
+  const lowNow=lowStockItems().filter(x=>clean.some(c=>stKey(c.product)===x.key));
+  alert("Order saved successfully ✅\n\nAmount: Rs. "+money(grand)+"\nOrder No: "+order.orderNo+"\n\nWhatsApp message tayyar hai."+(lowNow.length?"\n\n⚠️ Low stock: "+lowNow.map(x=>x.name+" ("+x.left+")").join(", "):""));
   window.open(waUrl,"_blank");
   showDashboard();
 }
@@ -1394,6 +1520,7 @@ function renderTodayDetails(){
 }
 
 function updateSummary(){
+  try{updateLowStock()}catch(e){}
   const a=getTodayOrders();
   const itemCount=a.reduce((s,o)=>s+o.items.reduce((x,i)=>x+i.qty,0),0);
   const sales=a.reduce((s,o)=>s+o.grand,0);
@@ -1958,6 +2085,171 @@ checkAppUpdate();
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
+</script>
+<script>
+const HNC_THEME_COLORS={candy:"#ff2d87",ocean:"#0077ff",mint:"#12b76a",sunset:"#ff5a1f",grape:"#7c3aed",night:"#0b0e22",cocoa:"#8d4b2f",royal:"#1e3a8a"};
+function setTheme(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("HNC_THEME",t)}catch(e){}
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=HNC_THEME_COLORS[t]||"#ff2d87";
+  document.getElementById("themeList").classList.add("hidden")}
+function toggleThemes(){document.getElementById("themeList").classList.toggle("hidden")}
+setTheme(document.documentElement.getAttribute("data-theme")||"candy");
+</script>
+<script>
+function stKey(n){return String(n).trim().toLowerCase()}
+function soldQty(name,since){const k=stKey(name);let q=0;(orders||[]).forEach(o=>{if(Number(o.id)>=since)(o.items||[]).forEach(i=>{if(stKey(i.product)===k)q+=Number(i.qty)||0})});return q}
+function openStockSales(){const mi=document.getElementById("smMonth");if(!mi.value)mi.value=todayKey().slice(0,7);document.getElementById("stockOverlay").classList.remove("hidden");showSSTab("stock");renderStock();renderMonthly();window.scrollTo(0,0)}
+function closeStockSales(){document.getElementById("stockOverlay").classList.add("hidden")}
+function showSSTab(t){["stock","month"].forEach(x=>{document.getElementById("ss_"+x).classList.toggle("hidden",x!==t);document.getElementById("sst_"+x).classList.toggle("active",x===t)})}
+function renderStock(){
+  const keys=Object.keys(productCatalog||{}).sort();
+  const sel=document.getElementById("stProduct"),old=sel.value;
+  sel.innerHTML=keys.length?keys.map(k=>`<option value="${esc(k)}">${esc(productCatalog[k].name||k)}</option>`).join(""):'<option value="">Pehle koi product register karein</option>';
+  if(old&&keys.includes(old))sel.value=old;
+  let h='<div class="ssRow h"><span>Product</span><span>Received</span><span>Sold</span><span>Left</span></div>';
+  keys.forEach(k=>{const p=productCatalog[k];
+    if(!p.stockSince){h+=`<div class="ssRow"><span>${esc(p.name||k)}</span><span>—</span><span>—</span><span class="muted">no stock</span></div>`;return}
+    const inn=Number(p.stockIn)||0,sold=soldQty(p.name||k,p.stockSince),left=inn-sold;
+    h+=`<div class="ssRow"><span>${esc(p.name||k)}</span><span>${money(inn)}</span><span>${money(sold)}</span><span class="${left<=0?"s-low":left<=lowLevel()?"s-warn":"s-ok"}">${money(left)}</span></div>`});
+  const ll=document.getElementById("lowLevel");if(ll&&document.activeElement!==ll)ll.value=lowLevel();
+  document.getElementById("stList").innerHTML=keys.length?h:'<div class="empty">Abhi koi product nahi.</div>';
+}
+function addStock(){
+  const k=document.getElementById("stProduct").value,q=Number(document.getElementById("stQty").value);
+  const p=productCatalog[k];
+  if(!p||!Number.isFinite(q)||q===0){alert("Product chunein aur sahi Qty likhein.");return}
+  if(!p.stockSince){p.stockSince=Date.now();p.stockIn=0}
+  p.stockIn=(Number(p.stockIn)||0)+q;
+  p.stockLog=[{d:todayKey(),q},...(p.stockLog||[])].slice(0,30);
+  saveUserData();document.getElementById("stQty").value="";renderStock();updateLowStock();
+}
+function monthData(m){
+  const os=(orders||[]).filter(o=>String(o.dateKey||"").startsWith(m));
+  const prod={},day={},cust=new Set();let qty=0,sales=0;
+  os.forEach(o=>{sales+=Number(o.grand)||0;cust.add(String(o.customer||"").toLowerCase());day[o.dateKey]=(day[o.dateKey]||0)+(Number(o.grand)||0);
+    (o.items||[]).forEach(i=>{const k=stKey(i.product),q=Number(i.qty)||0;qty+=q;const r=prod[k]||(prod[k]={n:i.product,q:0,a:0});r.q+=q;r.a+=Number(i.total)||q*(Number(i.rate)||0)})});
+  const rec={};let recovery=0,recCount=0;
+  (payments||[]).filter(p=>p.type==="credit"&&String(p.dateKey||"").startsWith(m)).forEach(p=>{
+    const k=(p.mobile||p.customer||"").trim().toLowerCase();if(!k)return;
+    const a=Number(p.amount)||0;recovery+=a;recCount++;
+    const r=rec[k]||(rec[k]={n:p.customer||"",mob:p.mobile||"",c:0,a:0});r.c++;r.a+=a;if(p.customer)r.n=p.customer;
+  });
+  let outstanding=0;const bal={};
+  Object.values(getCustomerTransactions()).forEach(c=>{
+    let d=0,cr=0;c.transactions.forEach(x=>x.type==="debit"?d+=x.amount:cr+=x.amount);
+    bal[c.key]=d-cr;if(d-cr>0)outstanding+=d-cr;
+  });
+  const recList=Object.keys(rec).map(k=>({...rec[k],bal:bal[k]||0})).sort((a,b)=>b.a-a.a);
+  return{orders:os.length,qty,sales,cust:cust.size,prod:Object.values(prod).sort((a,b)=>b.a-a.a),day:Object.entries(day).sort(),recovery,recCount,recList,outstanding};
+}
+let lastMonthlyHtml="";
+function renderMonthly(){
+  const m=document.getElementById("smMonth").value;if(!m)return;
+  const d=monthData(m),pd=new Date(m+"-01");pd.setMonth(pd.getMonth()-1);
+  const pm=pd.getFullYear()+"-"+String(pd.getMonth()+1).padStart(2,"0"),pmd=monthData(pm),prev=pmd.sales;
+  const diff=prev?Math.round((d.sales-prev)/prev*100):null;
+  const recPct=d.sales?Math.round(d.recovery/d.sales*100):null;
+  const t=(rows,cols)=>`<table class="ledgerTable"><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>${rows}</table>`;
+  const body=`<div class="smBox"><div class="stat">Orders <b>${d.orders}</b></div><div class="stat">Items <b>${money(d.qty)}</b></div><div class="stat">Customers <b>${d.cust}</b></div><div class="stat">Sales <b>Rs. ${money(d.sales)}</b></div><div class="stat">Recovery <b>Rs. ${money(d.recovery)}</b></div><div class="stat">Total Outstanding <b>Rs. ${money(d.outstanding)}</b></div></div>`
+   +(diff===null?'':`<div class="muted">Pichle mahine (${pm}) se: <b class="${diff>=0?"s-ok":"s-low"}">${diff>=0?"+":""}${diff}%</b></div>`)
+   +(recPct===null?'':`<div class="muted">Recovery / Sales: <b>${recPct}%</b> (${d.recCount} payments)</div>`)
+   +`<h3>Recovery – Customer wise</h3>`+(d.recList.length?t(d.recList.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.c}</td><td>Rs. ${money(r.a)}</td><td>Rs. ${money(r.bal)}</td></tr>`).join(""),["Customer","Payments","Received","Balance"]):'<div class="empty">Is mahine koi recovery nahi.</div>')
+   +`<h3>Product wise</h3>`+(d.prod.length?t(d.prod.map(r=>`<tr><td>${esc(r.n)}</td><td>${money(r.q)}</td><td>Rs. ${money(r.a)}</td></tr>`).join(""),["Product","Qty","Amount"]):'<div class="empty">Is mahine koi sale nahi.</div>')
+   +`<h3>Day wise</h3>`+(d.day.length?t(d.day.map(r=>`<tr><td>${r[0]}</td><td>Rs. ${money(r[1])}</td></tr>`).join(""),["Date","Sales"]):'<div class="empty">—</div>');
+  document.getElementById("smOut").innerHTML=body;
+  lastMonthlyHtml=`<h2>Monthly Sales &amp; Recovery: ${m}</h2><p>Orders: ${d.orders} | Items: ${money(d.qty)} | Customers: ${d.cust}<br>Sales: Rs. ${money(d.sales)}<br>Recovery: Rs. ${money(d.recovery)}<br>Total Outstanding: Rs. ${money(d.outstanding)}</p>`+body.replace(/<div class="smBox">.*?<\/div><\/div>/,"");
+}
+function monthlyPDF(){renderMonthly();printPDF("Monthly Sales Report",lastMonthlyHtml)}
+</script>
+<script>
+function lowLevel(){try{const raw=localStorage.getItem("HNC_LOW");const v=Number(raw);return raw!==null&&Number.isFinite(v)?v:10}catch(e){return 10}}
+function setLowLevel(v){const n=Math.max(0,Number(v)||0);try{localStorage.setItem("HNC_LOW",String(n))}catch(e){}renderStock();updateLowStock()}
+function lowStockItems(){
+  const out=[],lv=lowLevel();
+  Object.keys(productCatalog||{}).forEach(k=>{const p=productCatalog[k];if(!p||!p.stockSince)return;
+    const left=(Number(p.stockIn)||0)-soldQty(p.name||k,p.stockSince);
+    if(left<=lv)out.push({key:k,name:p.name||k,left});});
+  return out.sort((a,b)=>a.left-b.left);
+}
+function updateLowStock(){
+  const box=document.getElementById("lowStockBanner"),list=document.getElementById("lowStockList");if(!box||!list)return;
+  const low=lowStockItems();
+  list.innerHTML=low.map(x=>`<div class="lowRow"><span>${esc(x.name)}</span><b class="${x.left<=0?"s-low":"s-warn"}">${x.left<=0?"Out of stock ("+money(x.left)+")":"Left: "+money(x.left)}</b></div>`).join("");
+  const onDash=document.getElementById("newOrderPanel").classList.contains("hidden")&&!document.getElementById("newOrderLauncher").classList.contains("hidden");
+  box.classList.toggle("hidden",!low.length||!onDash);
+  document.querySelectorAll('button[onclick="openStockSales()"] .stockDot').forEach(e=>e.remove());
+  if(low.length){const b=document.querySelector('button[onclick="openStockSales()"]');if(b){const d=document.createElement("span");d.className="stockDot";d.textContent=low.length;b.appendChild(d)}}
+}
+(function(){const o=showDashboard;showDashboard=function(){o.apply(this,arguments);try{updateLowStock()}catch(e){}}})();
+(function(){const o=closeStockSales;closeStockSales=function(){o.apply(this,arguments);try{updateLowStock()}catch(e){}}})();
+</script>
+<script>
+const UR={
+"Order Booker • Login / Signup":"آرڈر بُکر • لاگ اِن / سائن اَپ","Login":"لاگ اِن","Signup":"سائن اَپ","Username":"یوزر نیم","Password":"پاس ورڈ","🔐 Login":"🔐 لاگ اِن","Full Name":"پورا نام","Confirm Password":"پاس ورڈ دوبارہ","📝 Create Account":"📝 اکاؤنٹ بنائیں",
+"📲 Install this app from your browser menu for an app-like experience.":"📲 ایپ کی طرح استعمال کرنے کے لیے براؤزر مینو سے انسٹال کریں۔",
+"Order Booker • Multiple Items • Offline • Separate User Records":"آرڈر بُکر • کئی آئٹمز • آف لائن • ہر یوزر کا الگ ریکارڈ","Design by Rashid Javed • 0314-6775046":"ڈیزائن: راشد جاوید • 0314-6775046","Logout":"لاگ آؤٹ",
+"💾 Backup & Restore":"💾 بیک اپ اور ری اسٹور","⬇️ Backup Data":"⬇️ بیک اپ ڈیٹا","⬆️ Restore Data":"⬆️ ری اسٹور ڈیٹا","🗑️ Reset All":"🗑️ سب ری سیٹ",
+"Purane mobile se Backup bana kar naye mobile mein Restore karein.":"پرانے موبائل سے بیک اپ بنا کر نئے موبائل میں ری اسٹور کریں۔",
+"➕ New Order":"➕ نیا آرڈر","💳 New Payment Voucher":"💳 نیا پیمنٹ واؤچر","👤 Customer Ledger":"👤 کسٹمر لیجر","📦 Stock & Monthly Sales":"📦 اسٹاک اور ماہانہ سیل","⏳ Pending Orders / Final Summary":"⏳ پینڈنگ آرڈرز / فائنل سمری",
+"⚠️ Low Stock Alert":"⚠️ کم اسٹاک الرٹ","📊 Today Summary":"📊 آج کی سمری","Orders":"آرڈرز","Items":"آئٹمز","Customers":"کسٹمرز","Sales":"سیل",
+"📄 Today Summary PDF":"📄 آج کی سمری PDF","📊 Today Sale – Product Wise Summary":"📊 آج کی سیل – پروڈکٹ وائز","🖨️ Today All Print":"🖨️ آج کے سب پرنٹ","📥 Save Today All PDF":"📥 آج کے سب PDF محفوظ کریں","📄 My Orders PDF":"📄 میرے آرڈرز PDF",
+"📋 Today's Complete Details":"📋 آج کی مکمل تفصیل","Customer":"کسٹمر","➕ New Customer":"➕ نیا کسٹمر","Customer Name":"کسٹمر کا نام","Mobile":"موبائل","Address":"پتہ","Order Items":"آرڈر آئٹمز","Product Name":"پروڈکٹ کا نام","Qty":"مقدار","Rate":"ریٹ","Amount":"رقم","💾 Save":"💾 محفوظ کریں","Grand Total:":"کل رقم:","💾 Save Complete Order":"💾 مکمل آرڈر محفوظ کریں",
+"✖ Dashboard":"✖ ڈیش بورڈ","↩️ Dashboard":"↩️ ڈیش بورڈ","✖ Close":"✖ بند کریں","⏳ Pending Orders":"⏳ پینڈنگ آرڈرز","📄 Final Summary":"📄 فائنل سمری","Pending Orders":"پینڈنگ آرڈرز","📄 Generate Final Summary PDF":"📄 فائنل سمری PDF بنائیں",
+"💳 Payment Voucher":"💳 پیمنٹ واؤچر","Transaction Type":"لین دین کی قسم","Credit — Payment Received":"کریڈٹ — رقم وصول ہوئی","Debit — Amount Due/Added":"ڈیبٹ — رقم واجب الادا","Note / Reference":"نوٹ / حوالہ","➕ Post Voucher":"➕ واؤچر پوسٹ کریں",
+"📊 Customer Wise Report":"📊 کسٹمر وائز رپورٹ","🔄 Refresh":"🔄 ریفریش","📄 Ledger PDF":"📄 لیجر PDF","📋 My Saved Orders":"📋 میرے محفوظ آرڈرز",
+"📦 Stock & Sales":"📦 اسٹاک اور سیل","Stock":"اسٹاک","Monthly Sales":"ماہانہ سیل","➕ Add Stock":"➕ اسٹاک شامل کریں","Product":"پروڈکٹ","Quantity (galti theek karne ke liye minus bhi likh sakte hain, jaise -5)":"مقدار (غلطی ٹھیک کرنے کے لیے مائنس بھی لکھ سکتے ہیں، جیسے -5)","Save Stock":"اسٹاک محفوظ کریں","📋 Current Stock":"📋 موجودہ اسٹاک","Low stock alert level":"کم اسٹاک الرٹ حد",
+"Left = Received − Sold. Sale sirf stock add karne ke baad ke orders se ghatti hai.":"باقی = موصول − فروخت۔ سیل صرف اسٹاک شامل کرنے کے بعد کے آرڈرز سے کم ہوتی ہے۔","Received":"موصول","Sold":"فروخت","Left":"باقی","no stock":"اسٹاک نہیں",
+"📅 Monthly Sales":"📅 ماہانہ سیل","Month":"مہینہ","📄 Monthly Report PDF":"📄 ماہانہ رپورٹ PDF","Recovery":"ریکوری","Total Outstanding":"کل بقایا","Recovery – Customer wise":"ریکوری – کسٹمر وائز","Product wise":"پروڈکٹ وائز","Day wise":"دن وائز","Payments":"ادائیگیاں","Balance":"بیلنس","Date":"تاریخ",
+"Is mahine koi recovery nahi.":"اس مہینے کوئی ریکوری نہیں۔","Is mahine koi sale nahi.":"اس مہینے کوئی سیل نہیں۔","Abhi koi product nahi.":"ابھی کوئی پروڈکٹ نہیں۔","Customer ka record nahi mila.":"کسٹمر کا ریکارڈ نہیں ملا۔","No orders found.":"کوئی آرڈر نہیں ملا۔","No pending orders. 🎉":"کوئی پینڈنگ آرڈر نہیں۔ 🎉","Aaj abhi koi order nahi hai.":"آج ابھی کوئی آرڈر نہیں ہے۔",
+"Debit":"ڈیبٹ","Credit":"کریڈٹ","Entries":"اندراجات","Ref":"حوالہ","Details":"تفصیل","Type":"قسم","Delete":"ڈیلیٹ","🗑️ Remove":"🗑️ ہٹائیں","📄 Generate Order PDF":"📄 آرڈر PDF بنائیں","✅ Order Complete":"✅ آرڈر مکمل","✅ Completed":"✅ مکمل","⏳ Pending":"⏳ پینڈنگ","New customer":"نیا کسٹمر",
+"Candy Pop":"کینڈی پاپ","Ocean":"سمندر","Mint Fresh":"پودینہ","Sunset":"غروب","Grape":"انگور","Night":"رات","Chocolate":"چاکلیٹ","Royal":"شاہی",
+"Total Orders":"کل آرڈرز","Total Sales":"کل سیل"
+};
+const URP={
+"Enter username":"یوزر نیم لکھیں","Enter password":"پاس ورڈ لکھیں","Enter your name":"اپنا نام لکھیں","Create username":"یوزر نیم بنائیں","Create password":"پاس ورڈ بنائیں","Confirm password":"پاس ورڈ دوبارہ لکھیں",
+"Search/select previous customer...":"پرانا کسٹمر تلاش کریں...","Customer name":"کسٹمر کا نام","Customer address":"کسٹمر کا پتہ","Search/select previous product...":"پرانی پروڈکٹ تلاش کریں...","Rate":"ریٹ","Amount":"رقم","Qty":"مقدار","Optional note":"اختیاری نوٹ",
+"Search customer / mobile...":"کسٹمر / موبائل تلاش کریں...","🔎 Search customer / mobile...":"🔎 کسٹمر / موبائل تلاش کریں...","🔎 Search customer or mobile...":"🔎 کسٹمر یا موبائل تلاش کریں...","🔎 Search customer, mobile or product...":"🔎 کسٹمر، موبائل یا پروڈکٹ تلاش کریں..."
+};
+let HNC_LANG="en";
+const _tn=new WeakMap();let _busy=false;
+function trTxt(n){
+  const cur=n.nodeValue;let rec=_tn.get(n);
+  if(rec&&cur!==rec.t&&cur!==rec.o){rec=null}
+  if(!rec){rec={o:cur,t:cur};_tn.set(n,rec)}
+  const m=rec.o.match(/^(\s*)([\s\S]*?)(\s*)$/);const core=m[2];
+  let out=rec.o;
+  if(HNC_LANG==="ur"){
+    let u=UR[core];
+    if(u===undefined){const m2=core.match(/^(.*?)(\s*:?)$/);u=UR[m2[1]]!==undefined?UR[m2[1]]+m2[2]:undefined}
+    if(u!==undefined)out=m[1]+u+m[3];
+  }
+  if(out!==cur)n.nodeValue=out;
+  rec.t=out;
+}
+function trAll(root){
+  _busy=true;
+  try{
+    const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentNode&&n.parentNode.nodeName;return(p==="SCRIPT"||p==="STYLE"||!n.nodeValue.trim())?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});
+    const arr=[];while(w.nextNode())arr.push(w.currentNode);arr.forEach(trTxt);
+    document.querySelectorAll("[placeholder]").forEach(e=>{
+      if(e.dataset.phEn===undefined)e.dataset.phEn=e.getAttribute("placeholder");
+      const en=e.dataset.phEn;e.setAttribute("placeholder",HNC_LANG==="ur"&&URP[en]?URP[en]:en);
+    });
+  }finally{_busy=false}
+}
+function setLang(l){
+  HNC_LANG=l==="ur"?"ur":"en";
+  try{localStorage.setItem("HNC_LANG",HNC_LANG)}catch(e){}
+  const h=document.documentElement;h.setAttribute("lang",HNC_LANG);h.setAttribute("dir",HNC_LANG==="ur"?"rtl":"ltr");
+  const b=document.getElementById("langFab");if(b)b.textContent=HNC_LANG==="ur"?"English":"اردو";
+  trAll();
+}
+function toggleLang(){setLang(HNC_LANG==="ur"?"en":"ur")}
+(function(){
+  let t=null;
+  new MutationObserver(()=>{if(_busy||HNC_LANG!=="ur")return;clearTimeout(t);t=setTimeout(()=>trAll(),30)}).observe(document.body,{childList:true,subtree:true,characterData:true});
+  let saved="en";try{saved=localStorage.getItem("HNC_LANG")||"en"}catch(e){}
+  setLang(saved);
+})();
 </script>
 </body>
 </html>
