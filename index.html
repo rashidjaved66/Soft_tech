@@ -165,17 +165,6 @@ select{background:#fff}
 }
 </style>
 
-<style>
-#installAppBtn{
-  display:none;position:fixed;right:12px;bottom:12px;z-index:10001;
-  background:#1f6feb;color:#fff;border:0;border-radius:999px;
-  padding:12px 16px;font-weight:700;font-size:14px;
-  box-shadow:0 4px 16px #0003
-}
-</style>
-<button id="installAppBtn" onclick="installPWA()">📲 Install App</button>
-
-
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("HNC_THEME")||"candy")}catch(e){}</script>
 <style id="hncThemeLayer">
@@ -274,6 +263,18 @@ html[lang=ur] input[type=number],html[lang=ur] input[type=tel],html[lang=ur] inp
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<style>
+#installAppBtn{
+  display:none;position:fixed;right:12px;bottom:12px;z-index:10001;
+  background:#1f6feb;color:#fff;border:0;border-radius:999px;
+  padding:12px 16px;font-weight:700;font-size:14px;
+  box-shadow:0 4px 16px #0003
+}
+</style>
+<button id="installAppBtn" onclick="installPWA()">📲 Install App</button>
+
+
+
 <div id="stockOverlay" class="ssOverlay hidden"><div class="ssWrap">
  <div class="sectionHead"><h2 style="margin:0">📦 Stock &amp; Sales</h2><button class="closePanel" onclick="closeStockSales()">✖ Close</button></div>
  <div class="authTabs"><button id="sst_stock" class="authTab active" onclick="showSSTab('stock')">Stock</button><button id="sst_month" class="authTab" onclick="showSSTab('month')">Monthly Sales</button></div>
@@ -528,9 +529,11 @@ html[lang=ur] input[type=number],html[lang=ur] input[type=tel],html[lang=ur] inp
   </div>
 
   <div class="card dashboardView">
-    <h2>📋 My Saved Orders</h2>
-    <input class="search" id="search" type="search" placeholder="🔎 Search customer, mobile or product..." oninput="renderOrders()">
-    <div id="orders"></div>
+    <button class="collapseBtn" type="button" onclick="toggleSavedOrders()">📋 My Saved Orders <span id="savedOrdersArrow">＋</span></button>
+    <div id="savedOrdersBody" class="hidden" style="margin-top:10px">
+      <input class="search" id="search" type="search" placeholder="🔎 Search customer, mobile or product..." oninput="renderOrders()">
+      <div id="orders"></div>
+    </div>
   </div>
 </div>
 
@@ -1665,6 +1668,7 @@ function printPDF(title,body){
   .receiptTotals{margin-top:7px;border-top:1px solid #111;padding-top:5px;font-size:10px}
   .receiptTotals>div{display:flex;justify-content:space-between;padding:2px 0}
   .grandReceipt{font-size:14px;border-top:2px solid #111;margin-top:3px;padding-top:4px}
+  .prevReceipt{font-size:13px}
   .receiptFooter{text-align:center;font-size:9px;margin-top:14px;border-top:1px dashed #777;padding-top:7px;line-height:1.6}
   </style>
 <style>
@@ -1745,6 +1749,13 @@ function singleOrderPDF(id){
 
 
 
+function prevBalanceFor(o){
+  const g=getCustomerTransactions()[(o.mobile||o.customer||"").trim().toLowerCase()];
+  let bal=0;
+  if(g)g.transactions.forEach(x=>{if((x.id||0)<(o.id||0))bal+=x.type==="debit"?x.amount:-x.amount});
+  return bal;
+}
+
 function todayAllSavePDF(){
   const today=getTodayOrders();
   if(!today.length){
@@ -1779,6 +1790,8 @@ function todayAllSavePDF(){
       <div class="receiptTotals">
         <div><span>Total Items</span><b>${o.items.reduce((s,x)=>s+Number(x.qty||0),0)}</b></div>
         <div class="grandReceipt"><span>Grand Total</span><b>Rs. ${money(o.grand)}</b></div>
+        <div class="prevReceipt"><span>Previous Balance</span><b>Rs. ${money(prevBalanceFor(o))}</b></div>
+        <div class="grandReceipt"><span>Total Balance</span><b>Rs. ${money(prevBalanceFor(o)+(Number(o.grand)||0))}</b></div>
       </div>
       <div class="receiptFooter">
         <div>Thank you for your business</div>
@@ -1833,6 +1846,8 @@ function todayAllPrint(){
       <div class="receiptTotals">
         <div><span>Total Items</span><b>${o.items.reduce((s,x)=>s+Number(x.qty||0),0)}</b></div>
         <div class="grandReceipt"><span>Grand Total</span><b>Rs. ${money(o.grand)}</b></div>
+        <div class="prevReceipt"><span>Previous Balance</span><b>Rs. ${money(prevBalanceFor(o))}</b></div>
+        <div class="grandReceipt"><span>Total Balance</span><b>Rs. ${money(prevBalanceFor(o)+(Number(o.grand)||0))}</b></div>
       </div>
 
       <div class="receiptFooter">
@@ -2083,7 +2098,7 @@ function checkAppUpdate(){
 checkAppUpdate();
 
 if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(err=>console.warn("sw.js register failed:",err)));
 }
 </script>
 <script>
@@ -2250,6 +2265,9 @@ function toggleLang(){setLang(HNC_LANG==="ur"?"en":"ur")}
   let saved="en";try{saved=localStorage.getItem("HNC_LANG")||"en"}catch(e){}
   setLang(saved);
 })();
+</script>
+<script>
+function toggleSavedOrders(){const b=document.getElementById("savedOrdersBody"),open=b.classList.toggle("hidden")===false;document.getElementById("savedOrdersArrow").textContent=open?"－":"＋";if(open)renderOrders()}
 </script>
 </body>
 </html>
